@@ -1,2 +1,2 @@
 # Driloader
-Selenium driver download
+Selenium drivers downloader tool.
