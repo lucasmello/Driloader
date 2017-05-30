@@ -9,6 +9,12 @@ class BrowserDetection:
         self.OS = platform.system()
         self.pattern = "\d{1,2}[\,\.]{1}\d{1,2}"
 
+    def get_internet_explorer_version(self):
+        cmd = 'reg query "HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer" /v svcVersion'
+        output = subprocess.getoutput(cmd)
+        reg = re.search(self.pattern, output)
+        return reg.group(0)
+
     def get_chrome_version(self):
         if self.OS == "Linux":
             return subprocess.getoutput("google-chrome --product-version")
