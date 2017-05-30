@@ -1,27 +1,27 @@
 import re
 import subprocess
-import sys
+import platform
 
 
 class BrowserDetection:
 
     def __init__(self):
-        self.OS = sys.platform
+        self.OS = platform.system()
         self.pattern = "\d{1,2}[\,\.]{1}\d{1,2}"
 
     def get_chrome_version(self):
-        if self.OS == "linux":
+        if self.OS == "Linux":
             return subprocess.getoutput("google-chrome --product-version")
-        if self.OS == "win32":
+        if self.OS == "Windows":
             cmd = 'wmic datafile where name="C:\\\Program Files (x86)\\\Google\\\Chrome\\\Application\\\chrome.exe" get Version'
             result = subprocess.getoutput(cmd)
             res_reg = re.search(self.pattern, result)
             return res_reg.group(0)
 
     def get_firefox_version(self):
-        if self.OS == "linux":
+	if self.OS == "Linux":
             output = subprocess.getoutput("firefox -v")
-        elif self.OS == "win32":
+        elif self.OS == "Windows":
             ff_path = self._find_firefox_exe_in_registry()
             output = subprocess.getoutput('"{}" -v | more'.format(ff_path))
         if output is not None:
