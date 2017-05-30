@@ -13,16 +13,20 @@ class BrowserDetection:
         cmd = 'reg query "HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer" /v svcVersion'
         output = subprocess.getoutput(cmd)
         reg = re.search(self.pattern, output)
-        return reg.group(0)
+        str_version = reg.group(0)
+        int_version = int(str_version.partition(".")[0])
+        return int_version
 
     def get_chrome_version(self):
         if self.OS == "Linux":
-            return subprocess.getoutput("google-chrome --product-version")
+            str_version = subprocess.getoutput("google-chrome --product-version")
         if self.OS == "Windows":
             cmd = 'wmic datafile where name="C:\\\Program Files (x86)\\\Google\\\Chrome\\\Application\\\chrome.exe" get Version'
             result = subprocess.getoutput(cmd)
             res_reg = re.search(self.pattern, result)
-            return res_reg.group(0)
+            str_version = res_reg.group(0)
+        int_version = int(str_version.partition(".")[0])
+        return int_version
 
     def get_firefox_version(self):
         if self.OS == "Linux":
@@ -32,7 +36,9 @@ class BrowserDetection:
             output = subprocess.getoutput('"{}" -v | more'.format(ff_path))
         if output is not None:
             out_reg = re.search(self.pattern, output)
-            return out_reg.group(0)
+            str_version = out_reg.group(0)
+            int_version = int(str_version.partition(".")[0])
+            return int_version
 
     def _find_firefox_exe_in_registry(self):
         try:

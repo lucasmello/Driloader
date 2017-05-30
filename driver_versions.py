@@ -1,3 +1,5 @@
+import json
+import os
 import requests
 import xml.etree.ElementTree as ET
 import re
@@ -7,6 +9,7 @@ class DriverVersions:
 
     def __init__(self):
         self.pattern = "\d{1,2}[\,\.]{1}\d{1,2}"
+        self._mount_chrome_json()
 
     def get_latest_ie_driver_version(self):
         resp = requests.get("http://selenium-release.storage.googleapis.com/")
@@ -39,3 +42,18 @@ class DriverVersions:
         resp = requests.get("https://github.com/mozilla/geckodriver/releases/latest")
         reg = re.search(self.pattern, resp.url.rpartition("/")[2])
         return float(reg.group(0))
+
+    def _mount_chrome_json(self):
+        with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'version_matcher.json'), "a+") as conf:
+            resp = requests.get("https://chromedriver.storage.googleapis.com/2.29/notes.txt")
+            r = re.findall("----------ChromeDriver v((?:\d+\.?)+) \((?:\d+-?)+\)----------\nSupports Chrome v((?:\d+-?)+)",
+                           resp.text)
+            chrome_json = {}
+            json_file = {"CHROME": {}}
+            for obj in r:
+                _from = obj[1].rpartition("-")[0]
+                _to = obj[1].rpartition("-")[2]
+                chrome_json[obj[0]] = {"from": _from, "to": _to}
+                json_file["CHROME"] = chrome_json
+            json.dump(json_file, conf)
+            conf.close()
