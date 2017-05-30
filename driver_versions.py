@@ -1,6 +1,5 @@
 import json
 import os
-
 import requests
 import xml.etree.ElementTree as ET
 import re
