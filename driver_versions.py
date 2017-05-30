@@ -2,10 +2,13 @@ import requests
 import xml.etree.ElementTree as ET
 import re
 
+
 class DriverVersions:
 
-    @staticmethod
-    def get_latest_ie_driver_version():
+    def __init__(self):
+        self.pattern = "\d{1,2}[\,\.]{1}\d{1,2}"
+
+    def get_latest_ie_driver_version(self):
         resp = requests.get("http://selenium-release.storage.googleapis.com/")
 
         xml_dl = ET.fromstring(resp.text)
@@ -16,13 +19,23 @@ class DriverVersions:
         last_version = 0
         for content in contents:
             version_str = content.find(tag + "Key").text[:4]
-            version_nbr = re.search("\d{1,2}[\,\.]{1}\d{1,2}", version_str)
+            version_nbr = re.search(self.pattern, version_str)
             if version_nbr is not None:
                 version_str = version_nbr.group(0)
             try:
                 version = float(version_str) if version_str is not None else 0
-            except:
+            except Exception:
                 version = 0
             if version > last_version:
                 last_version = version
         return last_version
+
+    def get_latest_chrome_driver_version(self):
+        resp = requests.get("https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+        reg = re.search(self.pattern, resp.text)
+        return float(reg.group(0))
+
+    def get_latest_gecko_driver_version(self):
+        resp = requests.get("https://github.com/mozilla/geckodriver/releases/latest")
+        reg = re.search(self.pattern, resp.url.rpartition("/")[2])
+        return float(reg.group(0))
