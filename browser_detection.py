@@ -19,7 +19,7 @@ class BrowserDetection:
             return res_reg.group(0)
 
     def get_firefox_version(self):
-	if self.OS == "Linux":
+        if self.OS == "Linux":
             output = subprocess.getoutput("firefox -v")
         elif self.OS == "Windows":
             ff_path = self._find_firefox_exe_in_registry()
@@ -27,7 +27,6 @@ class BrowserDetection:
         if output is not None:
             out_reg = re.search(self.pattern, output)
             return out_reg.group(0)
-
 
     def _find_firefox_exe_in_registry(self):
         try:
