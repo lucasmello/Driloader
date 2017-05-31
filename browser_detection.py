@@ -1,10 +1,16 @@
+"""Browser Detection
+
+   Using Google Python Style Guide:
+   http://google.github.io/styleguide/pyguide.html
+
+"""
+
 import re
 import subprocess
 import platform
 
-
 class BrowserDetection:
-    """ Provides methods to retrieve browsers' versions """
+    """ Provides methods to retrieve the browser's version """
 
     def __init__(self):
         """ Sets up the system information """
@@ -14,8 +20,19 @@ class BrowserDetection:
 
     def get_internet_explorer_version(self):
         """ Returns Internet Explorer version.
-            Raises a EnvironmentError in case it's
-            running in a different system """
+
+        Args:
+            None
+
+        Returns:
+            Returns an int with the browser version.
+
+        Raises:
+            None
+
+        TODO (jonathadv): Add exceptions handling.
+
+        """
 
         if self.os_name != "Windows":
             raise EnvironmentError("System is not Windows.")
@@ -30,13 +47,26 @@ class BrowserDetection:
 
     def get_chrome_version(self):
         """ Returns Google Chrome version.
-            If the command is not found, returns an Error """
+
+        Args:
+            None
+
+        Returns:
+            Returns an int with the browser version.
+
+        Raises:
+            None
+
+        TODO (jonathadv): Add exceptions handling.
+
+        """
 
         if self.os_name == "Linux":
             str_version = self._run_command("google-chrome --product-version")
 
         if self.os_name == "Windows":
-            cmd = 'wmic datafile where name="C:\\\Program Files (x86)\\\Google\\\Chrome\\\Application\\\chrome.exe" get Version'
+            cmd = 'wmic datafile where name="C:\\\Program Files (x86)\\\Google\
+            \\\Chrome\\\Application\\\chrome.exe" get Version'
             result = self._run_command(cmd)
             res_reg = re.search(self.pattern, result)
             str_version = res_reg.group(0)
@@ -46,7 +76,19 @@ class BrowserDetection:
 
     def get_firefox_version(self):
         """ Returns Firefox version.
-            If the command is not found, returns a Error """
+
+        Args:
+            None
+
+        Returns:
+            Returns an int with the browser version.
+
+        Raises:
+            None
+
+        TODO (jonathadv): Add exceptions handling.
+
+        """
 
         if self.os_name == "Linux":
             output = subprocess.getoutput("firefox -v")
@@ -60,8 +102,20 @@ class BrowserDetection:
             int_version = int(str_version.partition(".")[0])
             return int_version
 
-    def _find_firefox_exe_in_registry(self):
-        """ Finds firefox.exe file in Windows system """
+    @staticmethod
+    def _find_firefox_exe_in_registry():
+        """ Finds firefox.exe file in Windows systems.
+
+        Args:
+            None
+
+        Returns:
+            Returns an string with firefox.exe path.
+
+        Raises:
+            None
+
+        """
 
         try:
             from _winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE, HKEY_CURRENT_USER
@@ -93,12 +147,26 @@ class BrowserDetection:
 
         return shlex.split(command)[0]
 
-    def _run_command(self, command):
-        """ Runs the command sent as parameter and
-        returns its stdout.
-        If the command fails or is not found, it returns an Error.
+    @staticmethod
+    def _run_command(command):
+        """ Run command.
 
-        TODO: improve exceptions. """
+        Runs any command sent as parameter and returns its stdout 
+        in case of success.
+
+        Args:
+            command: A command line string. For example: "ls -l" and "firefox".
+
+        Returns:
+            Returns an string with the command stdout.
+
+        Raises:
+            Exception: The command was not found.
+            Exception: The command was found but failed.
+
+        TODO (jonathadv): Create specific exceptions.
+
+        """
 
         try:
             cmd_result = subprocess.run(command.split(), stdout=subprocess.PIPE)
