@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+
+# pylint: disable=anomalous-backslash-in-string
+
 """Browser Detection
 
    Using Google Python Style Guide:
@@ -151,7 +156,7 @@ class BrowserDetection:
     def _run_command(command):
         """ Run command.
 
-        Runs any command sent as parameter and returns its stdout 
+        Runs any command sent as parameter and returns its stdout
         in case of success.
 
         Args:
