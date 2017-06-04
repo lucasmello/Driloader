@@ -17,8 +17,18 @@ from driloadder.browser_detection import BrowserDetection
 class CliError(Exception):
     """ CliError """
     def __init__(self, message, cause):
+        """Init method
+
+        Sets superclass arguments up
+        Sets the cause of exception up
+
+        """
         super(CliError, self).__init__(message)
         self.cause = cause
+
+    def __str__(self):
+        return 'Error: {}.\nCause: {}'.format(self.args[0], self.cause)
+
 
 class DriloadderCommands():
     """Class that accts as facade to BrowserDetection"""
@@ -33,25 +43,79 @@ class DriloadderCommands():
         self.browser_detection = BrowserDetection()
 
     def get_google_chrome_version(self):
-        return self.browser_detection.get_chrome_version()
+        """ Returns Google Chrome version.
+
+        Args:
+            None
+
+        Returns:
+            Returns an int with the browser version.
+
+        Raises:
+            CliError: Case something goes wrong when getting the browser version
+
+        """
+        try:
+            return self.browser_detection.get_chrome_version()
+        except OSError as err:
+            raise CliError('Unable to get Internet Explorer version', str(err))
 
     def get_firefox_version(self):
-        return self.browser_detection.get_firefox_version()
+        """ Returns Firefox version.
+
+        Args:
+            None
+
+        Returns:
+            Returns an int with the browser version.
+
+        Raises:
+            CliError: Case something goes wrong when getting the browser version
+
+        """
+        try:
+            return self.browser_detection.get_firefox_version()
+        except OSError as err:
+            raise CliError('Unable to get Internet Explorer version', str(err))
 
     def get_internet_explorer_version(self):
+        """ Returns Internet Explorer version.
+
+        Args:
+            None
+
+        Returns:
+            Returns an int with the browser version.
+
+        Raises:
+            CliError: Case something goes wrong when getting the browser version
+
+        """
         try:
             return self.browser_detection.get_internet_explorer_version()
         except OSError as err:
             raise CliError('Unable to get Internet Explorer version', str(err))
 
 
-def show_python_version_error_error(python_version, acceptable_major, acceptable_minor):
-    print('Python {}.{} or later is required to run this script.\n'
-          'Your current version is {}.{}.'.format(acceptable_major,
-                                                  acceptable_minor,
-                                                  python_version[0],
-                                                  python_version[1]), file=sys.stderr)
-    sys.exit(1)
+def get_python_version_error(python_version, acceptable_major, acceptable_minor):
+    """ Returns Internet Explorer version.
+
+    Args:
+        python_version:
+        acceptable_major:
+        acceptable_minor:
+
+    Returns:
+        None
+
+    Raises:
+        CliError: Case something goes wrong when getting the browser version
+
+    """
+    message = 'Python {}.{} or later is required to run this script.'.format(acceptable_major, acceptable_minor)
+    cause = 'Your current version is {}.{}.'.format(python_version[0], python_version[1])
+
+    return message, cause
 
 
 def check_python_version():
@@ -62,9 +126,11 @@ def check_python_version():
         if python_version[1] >= acceptable_minor:
             return
         else:
-            show_python_version_error_error(python_version, acceptable_major, acceptable_minor)
+            message, cause = get_python_version_error(python_version, acceptable_major, acceptable_minor)
+            raise CliError(message, cause)
     else:
-        show_python_version_error_error(python_version, acceptable_major, acceptable_minor)
+        message, cause = get_python_version_error(python_version, acceptable_major, acceptable_minor)
+        raise CliError(message, cause)
 
 
 def parse_args():
@@ -94,7 +160,23 @@ def parse_args():
             return key
 
 
+def display_outout(message, exit_code):
+
+    if exit_code == 0:
+        output_type = sys.stdout
+    else:
+        output_type = sys.stderr
+
+    print(message, file=output_type)
+    sys.exit(exit_code)
+
+
 def main():
+    try:
+        check_python_version()
+    except CliError as cli_error:
+        display_outout(str(cli_error), 1)
+
     option = parse_args()
     commands = DriloadderCommands()
     options = {
@@ -104,20 +186,15 @@ def main():
     }
 
     exit_code = 0
-    output_type = sys.stdout
 
     try:
         result = options[option]()
         message = result
 
     except CliError as cli_error:
-        message = 'Error: {}.\nCause: {}'.format(str(cli_error), cli_error.cause)
-        exit_code = 1
-        output_type = sys.stderr
+        display_outout(str(cli_error), 1)
 
-    print(message, file=output_type)
-    sys.exit(exit_code)
+    display_outout(message, exit_code)
 
 if __name__ == '__main__':
-    check_python_version()
     main()
