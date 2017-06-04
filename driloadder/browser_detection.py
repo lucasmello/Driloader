@@ -14,6 +14,23 @@ import re
 import subprocess
 import platform
 
+
+class BrowserDetectionError(Exception):
+    """ BrowserDetectionError """
+    def __init__(self, message, cause):
+        """Init method
+
+        Sets superclass arguments up.
+        Sets the cause of exception up.
+
+        """
+        super(BrowserDetectionError, self).__init__(message)
+        self.cause = cause
+
+    def __str__(self):
+        return 'Error: {}.\nCause: {}'.format(self.args[0], self.cause)
+
+
 class BrowserDetection:
     """ Provides methods to retrieve the browser's version """
 
@@ -27,26 +44,27 @@ class BrowserDetection:
         """ Returns Internet Explorer version.
 
         Args:
-            None
 
         Returns:
             Returns an int with the browser version.
 
         Raises:
-            None
-
-        TODO (jonathadv): Add exceptions handling.
+            BrowserDetectionError: Case something goes wrong when getting browser version.
 
         """
 
         if self.os_name != "Windows":
-            raise EnvironmentError("System is not Windows.")
+            raise BrowserDetectionError('Unable to retrieve IE version.', 'System is not Windows.')
 
         cmd = 'reg query "HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer" /v svcVersion'
-        output = self._run_command(cmd)
-        reg = re.search(self.pattern, output)
-        str_version = reg.group(0)
-        int_version = int(str_version.partition(".")[0])
+
+        try:
+            output = self._run_command(cmd)
+            reg = re.search(self.pattern, output)
+            str_version = reg.group(0)
+            int_version = int(str_version.partition(".")[0])
+        except Exception as error:
+            raise BrowserDetectionError('Unable to retrieve IE version from system.', error)
 
         return int_version
 
@@ -54,27 +72,28 @@ class BrowserDetection:
         """ Returns Google Chrome version.
 
         Args:
-            None
 
         Returns:
             Returns an int with the browser version.
 
         Raises:
-            None
-
-        TODO (jonathadv): Add exceptions handling.
+            BrowserDetectionError: Case something goes wrong when getting browser version.
 
         """
 
-        if self.os_name == "Linux":
-            str_version = self._run_command("google-chrome --product-version")
+        try:
+            if self.os_name == "Linux":
+                str_version = self._run_command("google-chrome --product-version")
 
-        if self.os_name == "Windows":
-            cmd = 'wmic datafile where name="C:\\\Program Files (x86)\\\Google\
-            \\\Chrome\\\Application\\\chrome.exe" get Version'
-            result = self._run_command(cmd)
-            res_reg = re.search(self.pattern, result)
-            str_version = res_reg.group(0)
+            if self.os_name == "Windows":
+                cmd = 'wmic datafile where name="C:\\\Program Files (x86)\\\Google\
+                \\\Chrome\\\Application\\\chrome.exe" get Version'
+                result = self._run_command(cmd)
+                res_reg = re.search(self.pattern, result)
+                str_version = res_reg.group(0)
+
+        except Exception as error:
+            raise BrowserDetectionError('Unable to retrieve Chrome version from system', error)
 
         int_version = int(str_version.partition(b'.')[0])
         return int_version
@@ -83,36 +102,38 @@ class BrowserDetection:
         """ Returns Firefox version.
 
         Args:
-            None
+            self
 
         Returns:
             Returns an int with the browser version.
 
         Raises:
-            None
-
-        TODO (jonathadv): Add exceptions handling.
+            BrowserDetectionError: Case something goes wrong when getting browser version.
 
         """
 
-        if self.os_name == "Linux":
-            output = subprocess.getoutput("firefox -v")
-        elif self.os_name == "Windows":
-            ff_path = self._find_firefox_exe_in_registry()
-            output = self._run_command('"{}" -v | more'.format(ff_path))
+        try:
 
-        if output is not None:
-            out_reg = re.search(self.pattern, output)
-            str_version = out_reg.group(0)
-            int_version = int(str_version.partition(".")[0])
-            return int_version
+            if self.os_name == "Linux":
+                output = subprocess.getoutput("firefox -v")
+            elif self.os_name == "Windows":
+                ff_path = self._find_firefox_exe_in_registry()
+                output = self._run_command('"{}" -v | more'.format(ff_path))
+
+            if output is not None:
+                out_reg = re.search(self.pattern, output)
+                str_version = out_reg.group(0)
+                int_version = int(str_version.partition(".")[0])
+                return int_version
+
+        except Exception as error:
+            raise BrowserDetectionError('Unable to retrieve Firefox version from system', error)
 
     @staticmethod
     def _find_firefox_exe_in_registry():
         """ Finds firefox.exe file in Windows systems.
 
         Args:
-            None
 
         Returns:
             Returns an string with firefox.exe path.
@@ -131,7 +152,7 @@ class BrowserDetection:
 
         keys = (r"SOFTWARE\Classes\FirefoxHTML\shell\open\command",
                 r"SOFTWARE\Classes\Applications\firefox.exe\shell\open\command")
-        command = ""
+
         for path in keys:
             try:
                 key = OpenKey(HKEY_LOCAL_MACHINE, path)

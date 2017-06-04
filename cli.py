@@ -14,6 +14,8 @@
 import sys
 import argparse
 from driloadder.browser_detection import BrowserDetection
+from driloadder.browser_detection import BrowserDetectionError
+
 
 class OutputType():
     """Output Type
@@ -61,7 +63,7 @@ class DriloadderCommands():
         """ Returns Google Chrome version.
 
         Args:
-            None
+            self
 
         Returns:
             Returns an int with the browser version.
@@ -72,14 +74,14 @@ class DriloadderCommands():
         """
         try:
             return self.browser_detection.get_chrome_version()
-        except OSError as err:
-            raise CliError('Unable to get Internet Explorer version', str(err))
+        except BrowserDetectionError as err:
+            raise CliError('Unable to get the Google Chrome version', str(err))
 
     def get_firefox_version(self):
         """ Returns Firefox version.
 
         Args:
-            None
+            self
 
         Returns:
             Returns an int with the browser version.
@@ -90,14 +92,14 @@ class DriloadderCommands():
         """
         try:
             return self.browser_detection.get_firefox_version()
-        except OSError as err:
-            raise CliError('Unable to get Internet Explorer version', str(err))
+        except BrowserDetectionError as err:
+            raise CliError('Unable to get the Firefox version', str(err))
 
     def get_internet_explorer_version(self):
         """ Returns Internet Explorer version.
 
         Args:
-            None
+            self
 
         Returns:
             Returns an int with the browser version.
@@ -108,8 +110,43 @@ class DriloadderCommands():
         """
         try:
             return self.browser_detection.get_internet_explorer_version()
-        except OSError as err:
-            raise CliError('Unable to get Internet Explorer version', str(err))
+        except BrowserDetectionError as err:
+            raise CliError('Unable to get the Internet Explorer version', str(err))
+
+    def get_all_browsers_versions(self):
+        """ Returns all browsers version.
+
+        Args:
+            self
+
+        Returns:
+            Returns an string with the browser version. Like:
+            Internet Explorer: 11
+            Firefox: 45
+            Google Chrome: 58
+
+        Raises:
+            None
+
+        """
+        result_message = 'Internet Explorer: {}\nFirefox: {}\nGoogle Chrome: {}\n'
+
+        try:
+            ie_version = str(self.get_internet_explorer_version())
+        except CliError as error:
+            ie_version = str(error)
+
+        try:
+            ff_version = str(self.get_firefox_version())
+        except CliError as error:
+            ff_version = str(error)
+
+        try:
+            chrome_version = str(self.get_google_chrome_version())
+        except CliError as error:
+            chrome_version = str(error)
+
+        return result_message.format(ie_version, ff_version, chrome_version)
 
 
 def check_python_version():
@@ -118,7 +155,6 @@ def check_python_version():
     Verifies if the current Python version is compatible with this script's version.
 
     Args:
-        None
 
     Returns:
         None
@@ -149,7 +185,6 @@ def parse_args():
     Parse arguments from stdin.
 
     Args:
-        None
 
     Returns:
         A string argument from stdin.
@@ -176,7 +211,7 @@ def parse_args():
                         action='store_true')
 
     action.add_argument('--all',
-                        help='look for browsers an get their versions',
+                        help='look for browsers an get their versions.',
                         action='store_true')
 
     args = parser.parse_args()
@@ -197,6 +232,7 @@ def display_outout(message, output_type=OutputType.INFO):
 
     Args:
         message: The message to be displayed.
+        output_type: A type in OutputType class
 
     Returns:
         None
@@ -215,6 +251,10 @@ def display_outout(message, output_type=OutputType.INFO):
         std_descriptor = sys.stderr
         exit_code = 1
 
+    message = str(message)
+    if 'Cause' in message:
+        message = message.replace('Cause', '\tCause')
+
     print(message, file=std_descriptor)
     sys.exit(exit_code)
 
@@ -229,7 +269,6 @@ def main():
         on the argparser input.
 
     Args:
-        None
 
     Returns:
         None
@@ -248,8 +287,10 @@ def main():
     options = {
         'chrome': commands.get_google_chrome_version,
         'firefox': commands.get_firefox_version,
-        'internet_explorer': commands.get_internet_explorer_version
+        'internet_explorer': commands.get_internet_explorer_version,
+        'all': commands.get_all_browsers_versions
     }
+    message = ''
 
     try:
         result = options[option]()
