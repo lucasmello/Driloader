@@ -3,6 +3,7 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
+# pylint: disable=too-few-public-methods
 
 """Driloadder Command Line Interface
 
@@ -14,13 +15,27 @@ import sys
 import argparse
 from driloadder.browser_detection import BrowserDetection
 
+class OutputType():
+    """Output Type
+
+    Enum Class to store the possible output types.
+
+    Types:
+        INFO: Any information non-error related.
+        ERROR: Any error message.
+
+    """
+    INFO = 'INFO'
+    ERROR = 'ERROR'
+
+
 class CliError(Exception):
     """ CliError """
     def __init__(self, message, cause):
         """Init method
 
-        Sets superclass arguments up
-        Sets the cause of exception up
+        Sets superclass arguments up.
+        Sets the cause of exception up.
 
         """
         super(CliError, self).__init__(message)
@@ -36,7 +51,7 @@ class DriloadderCommands():
     def __init__(self):
         """Init method
 
-        Creates a new instance of BrowserDetection
+        Creates a new instance of BrowserDetection.
 
         """
 
@@ -52,7 +67,7 @@ class DriloadderCommands():
             Returns an int with the browser version.
 
         Raises:
-            CliError: Case something goes wrong when getting the browser version
+            CliError: Case something goes wrong when getting the browser version.
 
         """
         try:
@@ -70,7 +85,7 @@ class DriloadderCommands():
             Returns an int with the browser version.
 
         Raises:
-            CliError: Case something goes wrong when getting the browser version
+            CliError: Case something goes wrong when getting the browser version.
 
         """
         try:
@@ -88,7 +103,7 @@ class DriloadderCommands():
             Returns an int with the browser version.
 
         Raises:
-            CliError: Case something goes wrong when getting the browser version
+            CliError: Case something goes wrong when getting the browser version.
 
         """
         try:
@@ -97,45 +112,56 @@ class DriloadderCommands():
             raise CliError('Unable to get Internet Explorer version', str(err))
 
 
-def get_python_version_error(python_version, acceptable_major, acceptable_minor):
-    """ Returns Internet Explorer version.
+def check_python_version():
+    """ Check Python Version
+
+    Verifies if the current Python version is compatible with this script's version.
 
     Args:
-        python_version:
-        acceptable_major:
-        acceptable_minor:
+        None
 
     Returns:
         None
 
     Raises:
-        CliError: Case something goes wrong when getting the browser version
+        CliError: Case Python version is less than needed.
 
     """
-    message = 'Python {}.{} or later is required to run this script.'.format(acceptable_major, acceptable_minor)
-    cause = 'Your current version is {}.{}.'.format(python_version[0], python_version[1])
-
-    return message, cause
-
-
-def check_python_version():
     acceptable_major = 3
     acceptable_minor = 6
     python_version = sys.version_info
+    message = 'Python {}.{} or later is required to run this script.'.\
+        format(acceptable_major, acceptable_minor)
+    cause = 'Your current version is {}.{}.'.format(python_version[0], python_version[1])
+
     if python_version[0] >= acceptable_major:
         if python_version[1] >= acceptable_minor:
             return
         else:
-            message, cause = get_python_version_error(python_version, acceptable_major, acceptable_minor)
             raise CliError(message, cause)
     else:
-        message, cause = get_python_version_error(python_version, acceptable_major, acceptable_minor)
         raise CliError(message, cause)
 
 
 def parse_args():
+    """ Parse Arguments
+
+    Parse arguments from stdin.
+
+    Args:
+        None
+
+    Returns:
+        A string argument from stdin.
+
+    Raises:
+        None
+
+    TODO (jonathadv): Implement --verbose mode support.
+
+    """
+
     parser = argparse.ArgumentParser()
-    # parser.add_argument('--verbose', '-v', help='Show more messages', action='store_true')
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument('--firefox', '-f',
                         help='get Firefox version.',
@@ -160,22 +186,62 @@ def parse_args():
             return key
 
 
-def display_outout(message, exit_code):
+def display_outout(message, output_type=OutputType.INFO):
+    """ Display Output
 
-    if exit_code == 0:
-        output_type = sys.stdout
+    Displays an output message to the correct file descriptor (STDIN or STDOUT) and exits
+    the script based on the type sent as parameter.
+
+    If output_type == OutputType.INFO sends the message to STDIN and exits with code 0.
+    If output_type == OutputType.ERROR sends the message to STDERR and exits with code 1.
+
+    Args:
+        message: The message to be displayed.
+
+    Returns:
+        None
+
+    Raises:
+        None
+
+    TODO (jonathadv): Implement `--verbose mode` support.
+
+    """
+
+    if output_type == OutputType.INFO:
+        std_descriptor = sys.stdout
+        exit_code = 0
     else:
-        output_type = sys.stderr
+        std_descriptor = sys.stderr
+        exit_code = 1
 
-    print(message, file=output_type)
+    print(message, file=std_descriptor)
     sys.exit(exit_code)
 
 
 def main():
+    """ Main Function
+
+    Responsible for:
+        - call the check_python_version() function.
+        - call the parse_args() function and get the parameter sent from stdin.
+        - instantiate the DriloadderCommands class and call its methods based
+        on the argparser input.
+
+    Args:
+        None
+
+    Returns:
+        None
+
+    Raises:
+        None
+
+    """
     try:
         check_python_version()
     except CliError as cli_error:
-        display_outout(str(cli_error), 1)
+        display_outout(str(cli_error), OutputType.ERROR)
 
     option = parse_args()
     commands = DriloadderCommands()
@@ -185,16 +251,15 @@ def main():
         'internet_explorer': commands.get_internet_explorer_version
     }
 
-    exit_code = 0
-
     try:
         result = options[option]()
         message = result
 
     except CliError as cli_error:
-        display_outout(str(cli_error), 1)
+        display_outout(str(cli_error), OutputType.ERROR)
 
-    display_outout(message, exit_code)
+    display_outout(message, OutputType.INFO)
+
 
 if __name__ == '__main__':
     main()
