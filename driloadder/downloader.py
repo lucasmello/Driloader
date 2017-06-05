@@ -1,11 +1,12 @@
 import json
-import platform
 import os
+import platform
 import zipfile
+from configparser import ConfigParser
 
 import requests
-from configparser import ConfigParser
-from browser_detection import BrowserDetection
+
+from driloadder.browser_detection import BrowserDetection
 
 
 class Downloader:
