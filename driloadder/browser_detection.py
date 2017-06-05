@@ -56,11 +56,12 @@ class BrowserDetection:
         if self.os_name != "Windows":
             raise BrowserDetectionError('Unable to retrieve IE version.', 'System is not Windows.')
 
-        cmd = 'reg query "HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer" /v svcVersion'
+        cmd = ['reg', 'query',
+               'HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer', '/v', 'svcVersion']
 
         try:
             output = self._run_command(cmd)
-            reg = re.search(self.pattern, output)
+            reg = re.search(self.pattern, str(output))
             str_version = reg.group(0)
             int_version = int(str_version.partition(".")[0])
         except Exception as error:
@@ -86,16 +87,18 @@ class BrowserDetection:
                 str_version = self._run_command("google-chrome --product-version")
 
             if self.os_name == "Windows":
-                cmd = 'wmic datafile where name="C:\\\Program Files (x86)\\\Google\
-                \\\Chrome\\\Application\\\chrome.exe" get Version'
+                app = 'C:\\\Program Files (x86)\\\Google\\\Chrome\\\Application\\\chrome.exe"'
+                cmd = ['wmic', 'datafile', 'where',
+                       'name="{}'.format(app), 'get', 'Version', '/value']
+
                 result = self._run_command(cmd)
-                res_reg = re.search(self.pattern, result)
+                res_reg = re.search(self.pattern, str(result))
                 str_version = res_reg.group(0)
 
         except Exception as error:
             raise BrowserDetectionError('Unable to retrieve Chrome version from system', error)
 
-        int_version = int(str_version.partition(b'.')[0])
+        int_version = int(str_version.partition('.')[0])
         return int_version
 
     def get_firefox_version(self):
@@ -118,10 +121,10 @@ class BrowserDetection:
                 output = subprocess.getoutput("firefox -v")
             elif self.os_name == "Windows":
                 ff_path = self._find_firefox_exe_in_registry()
-                output = self._run_command('"{}" -v | more'.format(ff_path))
+                output = self._run_command([ff_path, '-v', '|', 'more'])
 
             if output is not None:
-                out_reg = re.search(self.pattern, output)
+                out_reg = re.search(self.pattern, str(output))
                 str_version = out_reg.group(0)
                 int_version = int(str_version.partition(".")[0])
                 return int_version
@@ -181,7 +184,9 @@ class BrowserDetection:
         in case of success.
 
         Args:
-            command: A command line string. For example: "ls -l" and "firefox".
+            command: Can be a string or string list containing a command line.
+            For example: "ls -l" and "firefox" or ['ls', '-l'] and ['firefox']
+
 
         Returns:
             Returns an string with the command stdout.
@@ -193,14 +198,24 @@ class BrowserDetection:
         TODO (jonathadv): Create specific exceptions.
 
         """
+        if isinstance(command, str):
+            command_array = command.split(" ")
+        else:
+            command_array = command
 
         try:
-            cmd_result = subprocess.run(command.split(), stdout=subprocess.PIPE)
+            cmd_result = subprocess.run(command_array, stdout=subprocess.PIPE)
 
             if cmd_result.returncode == 0:
-                return cmd_result.stdout
+                result = None
+                if isinstance(cmd_result.stdout, bytes):
+                    result = cmd_result.stdout.decode('utf-8')
+                else:
+                    result = cmd_result.stdout
+
+                return result
             else:
-                raise Exception("Command \"{}\" failed!".format(command))
+                raise Exception("Command \"{}\" failed!".format(" ".join(command)))
 
         except FileNotFoundError:
-            raise Exception("Command \"{}\" not found!".format(command))
+            raise Exception("Command \"{}\" not found!".format(" ".join(command)))
