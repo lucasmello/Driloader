@@ -30,12 +30,9 @@ class Downloader:
 
     @staticmethod
     def _download_file(url, path_to_download):
-        print('entrou aqui')
         if not os.path.exists(path_to_download):
-            print('aqui tambem')
             response = requests.get(url, verify=False)
             with open(path_to_download, "wb") as f:
-                print(path_to_download)
                 f.write(response.content)
 
     @staticmethod
@@ -51,11 +48,7 @@ class Downloader:
             zfile.extractall(path_to_extract)
             zfile.close()
         if zip_file.endswith("gz"):
-            print(zip_file)
-            tar = tarfile.open(zip_file)
-            tar.extractall()
-            tar.close()
-            # subprocess.Popen("tar -zxvf %s -C %s" % (zip_file, zip_file.rpartition("/")[0]), shell=True).wait()
+            subprocess.Popen("tar -zxvf %s -C %s" % (zip_file, zip_file.rpartition("/")[0]), shell=True).wait()
         if delete_after_extract:
             os.remove(zip_file)
 
