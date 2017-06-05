@@ -33,8 +33,9 @@ $  ./cli.py --chrome
 ```
 
 ***Get Internet Explorer version (Windows system)***
-```bash
-TBD
+```cmd
+> cli.py -i
+11
 ```
 
 
@@ -54,6 +55,15 @@ $  ./cli.py --all
 Internet Explorer: Error: Unable to get the Internet Explorer version.
         Cause: Error: Unable to retrieve IE version..
         Cause: System is not Windows.
+Firefox: 45
+Google Chrome: 58
+
+```
+
+***Get all browsers version (Windows system)***
+```bash
+> cli.py --all
+Internet Explorer: 11
 Firefox: 45
 Google Chrome: 58
 
