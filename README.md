@@ -3,7 +3,7 @@ Selenium drivers downloader tool with standalone CLI support.
 
 
 **Requires:**
-* Python 3.4 or higher
+* Python 3.6 or higher
 
 **CLI Usage:**
 ```bash
