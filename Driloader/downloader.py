@@ -58,4 +58,4 @@ class Downloader:
         :param section: drivers_info.ini section.
         :return: unzipped file's path.
         """
-        return "%s%s%s" % (self.drivers_path, os.sep, self.browser.file_name_zip)
+        return "%s%s%s" % (self.drivers_path, os.sep, self.browser.file_name)
