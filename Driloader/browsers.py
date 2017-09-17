@@ -12,11 +12,23 @@ CHROMEDRIVER = "CHROMEDRIVER"
 IEDRIVER = "IEDRIVER"
 PATTERN_SEARCH = "\d{1,2}[\,\.]{1}\d{1,2}"
 
+GECKO_LATEST_VERSION_URL = "https://github.com/mozilla/geckodriver/releases/" \
+                           "latest"
+
+CHROME_VERSIONS_URL = "https://chromedriver.storage.googleapis.com/" \
+                      "{version}/notes.txt"
+
+CHROME_SUPORTEDS_VERSIONS = "----------ChromeDriver v((?:\d+\.?)+)"\
+                            " \((?:\d+-?)+\)----------\n" \
+                            "Supports Chrome v((?:\d+-?)+)"
+
 
 class Browser:
     def __init__(self, driver, os_name):
         self.driver = driver
         self.base_url = getConfig(self.driver, 'base_url')
+        self.version_instaled = self.get_isntaled_version()
+
         self.version_latest = self.get_latest()
         self.version_suported = self.get_suported()
 
@@ -43,6 +55,15 @@ class Browser:
         if self.driver == IEDRIVER:
             return self.version_latest
 
+    def get_isntaled_version(self):
+        browser = BrowserDetection()
+        if self.driver == GECKODRIVER:
+            return browser.get_firefox_version()
+        if self.driver == CHROMEDRIVER:
+            return browser.get_chrome_version()
+        if self.driver == IEDRIVER:
+            return browser.get_internet_explorer_version()
+
 # IE DRIVER SECTION
     def get_latest_ie_driver_version(self):
         resp = requests.get("http://selenium-release.storage.googleapis.com/")
@@ -68,34 +89,51 @@ class Browser:
 
 # CHROME DRIVER SECTION
     def get_latest_chrome_driver_version(self):
-        resp = requests.get("https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
+        resp = requests.get("https://chromedriver.storage.googleapis.com/"
+                            "LATEST_RELEASE")
+
         reg = re.search(PATTERN_SEARCH, resp.text)
         return float(reg.group(0))
 
     def get_suported_chrome_driver_version(self):
-        browser = BrowserDetection()
-        chrome_version = browser.get_chrome_version()
-        chrome_json_versions_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'version_matcher.json')
+        chrome_json_versions_path = os.path.join(os.path.abspath
+                                                 (os.path.dirname(__file__)),
+                                                 'version_matcher.json')
+
         if os.path.isfile(chrome_json_versions_path) is not True:
+            print('caiu1')
             self._mount_chrome_json()
 
         config = json.load(open(chrome_json_versions_path))
         chrome_json = config.get("CHROME")
+
+        print(self.version_latest, chrome_json.keys())
+        if str(self.version_latest) not in chrome_json.keys():
+            print('caiu2')
+            self._mount_chrome_json()
+            config = json.load(open(chrome_json_versions_path))
+            chrome_json = config.get("CHROME")
+
         for attr, value in chrome_json.items():
             r = range(int(value.get("from")), int(value.get("to")) + 1)
-            if chrome_version in r:
+            if self.version_instaled in r:
                 return attr
 
 # GECKO DRIVER SECTION
     def get_latest_gecko_driver_version(self):
-        resp = requests.get("https://github.com/mozilla/geckodriver/releases/latest")
+        resp = requests.get(GECKO_LATEST_VERSION_URL)
         reg = re.search('\d{1,2}[\d.]+', resp.url.rpartition("/")[2])
         return reg.group(0)
 
     def _mount_chrome_json(self):
-        with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'version_matcher.json'), "a+") as conf:
-            resp = requests.get("https://chromedriver.storage.googleapis.com/2.29/notes.txt")
-            r = re.findall("----------ChromeDriver v((?:\d+\.?)+) \((?:\d+-?)+\)----------\nSupports Chrome v((?:\d+-?)+)",
+        with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                               'version_matcher.json'), "w+") as conf:
+
+            notes_url = CHROME_VERSIONS_URL \
+                .replace('{version}', str(self.version_latest))
+
+            resp = requests.get(notes_url)
+            r = re.findall(CHROME_SUPORTEDS_VERSIONS,
                            resp.text)
             chrome_json = {}
             json_file = {"CHROME": {}}
