@@ -18,7 +18,7 @@ GECKO_LATEST_VERSION_URL = "https://github.com/mozilla/geckodriver/releases/" \
 CHROME_VERSIONS_URL = "https://chromedriver.storage.googleapis.com/" \
                       "{version}/notes.txt"
 
-CHROME_SUPORTEDS_VERSIONS = "----------ChromeDriver v((?:\d+\.?)+)"\
+CHROME_SUPPORTED_VERSIONS = "----------ChromeDriver v((?:\d+\.?)+)"\
                             " \((?:\d+-?)+\)----------\n" \
                             "Supports Chrome v((?:\d+-?)+)"
 
@@ -130,7 +130,7 @@ class Browser:
                 .replace('{version}', str(self.version_latest))
 
             resp = requests.get(notes_url)
-            r = re.findall(CHROME_SUPORTEDS_VERSIONS,
+            r = re.findall(CHROME_SUPPORTED_VERSIONS,
                            resp.text)
             chrome_json = {}
             json_file = {"CHROME": {}}
