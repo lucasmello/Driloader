@@ -101,15 +101,12 @@ class Browser:
                                                  'version_matcher.json')
 
         if os.path.isfile(chrome_json_versions_path) is not True:
-            print('caiu1')
             self._mount_chrome_json()
 
         config = json.load(open(chrome_json_versions_path))
         chrome_json = config.get("CHROME")
 
-        print(self.version_latest, chrome_json.keys())
         if str(self.version_latest) not in chrome_json.keys():
-            print('caiu2')
             self._mount_chrome_json()
             config = json.load(open(chrome_json_versions_path))
             chrome_json = config.get("CHROME")
