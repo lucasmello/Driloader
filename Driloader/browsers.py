@@ -76,7 +76,8 @@ class Browser:
         browser = BrowserDetection()
         chrome_version = browser.get_chrome_version()
         chrome_json_versions_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'version_matcher.json')
-        if os.path.isfile(chrome_json_versions_path) is not True:
+        if os.path.exists(chrome_json_versions_path):
+            os.remove(chrome_json_versions_path)
             self._mount_chrome_json()
 
         config = json.load(open(chrome_json_versions_path))
@@ -94,7 +95,8 @@ class Browser:
 
     def _mount_chrome_json(self):
         with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'version_matcher.json'), "a+") as conf:
-            resp = requests.get("https://chromedriver.storage.googleapis.com/2.29/notes.txt")
+            resp = requests.get("https://chromedriver.storage.googleapis.com/{}/notes.txt".format(
+                self.get_latest_chrome_driver_version()))
             r = re.findall("----------ChromeDriver v((?:\d+\.?)+) \((?:\d+-?)+\)----------\nSupports Chrome v((?:\d+-?)+)",
                            resp.text)
             chrome_json = {}
