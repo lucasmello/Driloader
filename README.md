@@ -1,7 +1,7 @@
 # Driloader
 Selenium drivers downloader tool with standalone CLI support.
 
- ** Why is it for?**
+ **Why is it for?**
  
  Selenium needs a specific driver to work with each browser. Every driver has a version that works with specific browser
  versions, and it's really annoying reading the changelogs to check if the current driver will work with the new browser
