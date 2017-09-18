@@ -1,4 +1,13 @@
 # Driloader
+.. image:: https://img.shields.io/pypi/v/driloader.svg
+    :target: https://pypi.python.org/pypi/driloader
+
+.. image:: https://img.shields.io/pypi/l/driloader.svg
+    :target: https://pypi.python.org/pypi/driloader
+
+.. image:: https://img.shields.io/github/contributors/lucasmello/Driloader.svg
+    :https://github.com/lucasmello/Driloader/graphs/contributors
+
 Selenium drivers downloader tool with standalone CLI support.
 
  **Why is it for?**
