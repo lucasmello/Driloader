@@ -25,7 +25,7 @@ chmod +x cli.py
 ```
 
 Usage with Firefox:
-```
+```python
 from Driloader import driloader
 from selenium.webdriver import Firefox
 
@@ -36,7 +36,7 @@ browser.quit()
 ```
 
 Usage with Chrome
-```
+```python
 from Driloader import driloader
 from selenium.webdriver import Chrome
 
