@@ -1,4 +1,5 @@
 import os
+import subprocess
 from .downloader import Downloader
 from .browsers import CHROMEDRIVER, GECKODRIVER, IEDRIVER
 
@@ -41,4 +42,7 @@ def download_driver(path_to_download, version, browser):
 
     driver._download_file(download_url, full_path)
     driver._unzip(full_path, driver.drivers_path, True)
+    if browser == CHROMEDRIVER:
+        make_executable = "chmod +x {}{}{}".format(driver.drivers_path, os.sep, "chromedriver")
+        subprocess.run(make_executable, stdout=subprocess.PIPE, shell=True)
     return driver._get_path(driver.browser.driver)
