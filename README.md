@@ -11,7 +11,30 @@ chmod +x cli.py
 ./cli.py -h
 ```
 
-usage:
+Usage with Firefox:
+```
+from Driloader import driloader
+from selenium.webdriver import Firefox
+
+driver_path = driloader.download_gecko_driver()
+browser = Firefox(executable_path=driver_path)
+browser.get("http://www.google.com")
+browser.quit()
+```
+
+Usage with Chrome
+```
+from Driloader import driloader
+from selenium.webdriver import Chrome
+
+driver_path = driloader.download_chrome_driver()
+browser = Chrome(executable_path=driver_path)
+browser.get("http://www.google.com")
+browser.quit()
+```
+
+
+standalone usage:
 ```bash
 cli.py [-h] (--firefox | --chrome | --internet-explorer | --all)
 ```
