@@ -3,9 +3,10 @@ import os
 import zipfile
 import requests
 import subprocess
-import tarfile
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from .browsers import Browser
+
 
 class Downloader:
 
@@ -31,6 +32,7 @@ class Downloader:
     @staticmethod
     def _download_file(url, path_to_download):
         if not os.path.exists(path_to_download):
+            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
             response = requests.get(url, verify=False)
             with open(path_to_download, "wb") as f:
                 f.write(response.content)
