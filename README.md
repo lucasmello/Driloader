@@ -5,6 +5,9 @@
 .. image:: https://img.shields.io/pypi/l/driloader.svg
     :target: https://pypi.python.org/pypi/driloader
 
+.. image:: https://img.shields.io/pypi/pyversions/driloader.svg
+    :target: https://pypi.python.org/pypi/driloader
+
 .. image:: https://img.shields.io/github/contributors/lucasmello/Driloader.svg
     :https://github.com/lucasmello/Driloader/graphs/contributors
 
