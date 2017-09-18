@@ -28,7 +28,7 @@ def download_driver(path_to_download, version, browser):
         driver_version = version
 
     file_name = driver.browser.file_name_zip
-    file_name = file_name.replace('{version}', driver_version)
+    file_name = file_name.replace('{version}', str(driver_version))
 
     download_url = "{}{}".format(driver.browser.base_url, file_name)
     download_url = download_url.replace("{version}", str(driver_version))
