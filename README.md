@@ -46,6 +46,17 @@ browser.get("http://www.google.com")
 browser.quit()
 ```
 
+Usage with Internet Explorer
+```python
+from Driloader import driloader
+from selenium.webdriver import Ie
+
+
+driver_path = driloader.download_ie_driver()
+browser = Ie(executable_path=driver_path)
+browser.get("http://www.google.com")
+browser.quit()
+```
 
 standalone usage:
 ```bash
