@@ -6,7 +6,9 @@ Selenium drivers downloader tool with standalone CLI support.
 * Python 3.6 or higher
 
 **Installing:**
-* pip install driloader
+```
+ pip install driloader
+```
 
 **CLI Usage:**
 ```bash
