@@ -1,6 +1,13 @@
 # Driloader
 Selenium drivers downloader tool with standalone CLI support.
 
+ ** Why is it for?**
+ Selenium needs a specific driver to work with each browser. Every driver has a version that works with specific browser
+ versions, and it's really annoying reading the changelogs to check if the current driver will work with the new browser
+ version. Plus, a lot of times a test crashes because the browser has updated and the driver is not compatible anymore.
+ That's why Driloader exists: To make this process so much easier! Seriously, you don't need to worry with it anymore,
+ we solved this problem! 
+
 
 **Requires:**
 * Python 3.6 or higher
