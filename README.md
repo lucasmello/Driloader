@@ -1,9 +1,22 @@
 # Driloader
 Selenium drivers downloader tool with standalone CLI support.
 
+ **Why is it for?**
+ 
+ Selenium needs a specific driver to work with each browser. Every driver has a version that works with specific browser
+ versions, and it's really annoying reading the changelogs to check if the current driver will work with the new browser
+ version. Plus, a lot of times a test crashes because the browser has updated and the driver is not compatible anymore.
+ That's why Driloader exists: To make this process so much easier! Seriously, you don't need to worry with it anymore,
+ we solved this problem!
+
 
 **Requires:**
 * Python 3.6 or higher
+
+**Installing:**
+```
+ pip install driloader
+```
 
 **CLI Usage:**
 ```bash
@@ -11,7 +24,30 @@ chmod +x cli.py
 ./cli.py -h
 ```
 
-usage:
+Usage with Firefox:
+```
+from Driloader import driloader
+from selenium.webdriver import Firefox
+
+driver_path = driloader.download_gecko_driver()
+browser = Firefox(executable_path=driver_path)
+browser.get("http://www.google.com")
+browser.quit()
+```
+
+Usage with Chrome
+```
+from Driloader import driloader
+from selenium.webdriver import Chrome
+
+driver_path = driloader.download_chrome_driver()
+browser = Chrome(executable_path=driver_path)
+browser.get("http://www.google.com")
+browser.quit()
+```
+
+
+standalone usage:
 ```bash
 cli.py [-h] (--firefox | --chrome | --internet-explorer | --all)
 ```
