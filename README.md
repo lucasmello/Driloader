@@ -26,7 +26,7 @@ chmod +x cli.py
 
 Usage with Firefox:
 ```python
-from Driloader import driloader
+from driloader import driloader
 from selenium.webdriver import Firefox
 
 driver_path = driloader.download_gecko_driver()
@@ -37,7 +37,7 @@ browser.quit()
 
 Usage with Chrome
 ```python
-from Driloader import driloader
+from driloader import driloader
 from selenium.webdriver import Chrome
 
 driver_path = driloader.download_chrome_driver()
