@@ -79,7 +79,6 @@ $  ./cli.py --firefox
 $  ./cli.py --chrome
 58
 ```
-''
 
 ### Retrieve Internet Explorer version (Windows system)
 ```cmd
