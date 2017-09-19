@@ -9,7 +9,7 @@ Selenium drivers downloader tool with standalone CLI support.
  Selenium needs a specific driver to work with each browser. Every driver has a version that works with specific browser
  versions, and it's really annoying reading the changelogs to check if the current driver will work with the new browser
  version. Plus, a lot of times a test crashes because the browser has updated and the driver is not compatible anymore.
- That's why Driloader exists: To make this process so much easier! Seriously, you don't need to worry with it anymore,
+ That's why Driloader exists: To make this process so much easier! Seriously, you don't need to worry about it anymore,
  we solved this problem!
 
 
@@ -27,7 +27,7 @@ chmod +x cli.py
 ./cli.py -h
 ```
 
-Usage with Firefox:
+**Usage with Firefox:**
 ```python
 from driloader import driloader
 from selenium.webdriver import Firefox
@@ -38,7 +38,7 @@ browser.get("http://www.google.com")
 browser.quit()
 ```
 
-Usage with Chrome
+**Usage with Chrome**
 ```python
 from driloader import driloader
 from selenium.webdriver import Chrome
@@ -49,7 +49,7 @@ browser.get("http://www.google.com")
 browser.quit()
 ```
 
-Usage with Internet Explorer
+**Usage with Internet Explorer**
 ```python
 from driloader import driloader
 from selenium.webdriver import Ie
