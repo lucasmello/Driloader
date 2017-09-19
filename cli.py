@@ -5,7 +5,7 @@
 
 # pylint: disable=too-few-public-methods
 
-"""Driloadder Command Line Interface
+"""Driloader Command Line Interface
    Using Google Python Style Guide:
    http://google.github.io/styleguide/pyguide.html
 """
@@ -42,7 +42,7 @@ class CliError(Exception):
         return 'Error: {}.\nCause: {}'.format(self.args[0], self.cause)
 
 
-class DriloadderCommands():
+class DriloaderCommands():
     """A facade to BrowserDetection"""
 
     def __init__(self):
@@ -219,7 +219,7 @@ def main():
     Responsible for:
         - call the check_python_version() function.
         - call the parse_args() function and get the parameter sent from stdin.
-        - instantiate the DriloadderCommands class and call its methods based
+        - instantiate the DriloaderCommands class and call its methods based
         on the argparser input.
     Args:
     Returns:
@@ -233,7 +233,7 @@ def main():
         display_output(str(cli_error), OutputType.ERROR)
 
     option = parse_args()
-    commands = DriloadderCommands()
+    commands = DriloaderCommands()
     options = {
         'chrome': commands.get_google_chrome_version,
         'firefox': commands.get_firefox_version,
