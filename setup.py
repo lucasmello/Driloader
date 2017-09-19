@@ -8,13 +8,13 @@ setup(
     description='Driver downloader for Selenium',
     author='Lucas Trajano;Felipe Viegas;Jonatha Daguerre',
     license='MIT',
-    classifiers=(
-        'Development Status :: 5 - Production/Stable'
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython'
-    )
+    ]
 )
