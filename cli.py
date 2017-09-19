@@ -43,7 +43,7 @@ class CliError(Exception):
 
 
 class DriloadderCommands():
-    """Class that accts as facade to BrowserDetection"""
+    """A facade to BrowserDetection"""
 
     def __init__(self):
         """Init method
@@ -157,7 +157,6 @@ def parse_args():
         A string argument from stdin.
     Raises:
         None
-    TODO (jonathadv): Implement --verbose mode support.
     """
 
     parser = argparse.ArgumentParser()
@@ -185,7 +184,7 @@ def parse_args():
             return key
 
 
-def display_outout(message, output_type=OutputType.INFO):
+def display_output(message, output_type=OutputType.INFO):
     """ Display Output
     Displays an output message to the correct file descriptor (STDIN or STDOUT) and exits
     the script based on the type sent as parameter.
@@ -198,7 +197,6 @@ def display_outout(message, output_type=OutputType.INFO):
         None
     Raises:
         None
-    TODO (jonathadv): Implement `--verbose mode` support.
     """
 
     if output_type == OutputType.INFO:
@@ -232,7 +230,7 @@ def main():
     try:
         check_python_version()
     except CliError as cli_error:
-        display_outout(str(cli_error), OutputType.ERROR)
+        display_output(str(cli_error), OutputType.ERROR)
 
     option = parse_args()
     commands = DriloadderCommands()
@@ -249,9 +247,9 @@ def main():
         message = result
 
     except CliError as cli_error:
-        display_outout(str(cli_error), OutputType.ERROR)
+        display_output(str(cli_error), OutputType.ERROR)
 
-    display_outout(message, OutputType.INFO)
+    display_output(message, OutputType.INFO)
 
 
 if __name__ == '__main__':
