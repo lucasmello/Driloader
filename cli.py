@@ -5,7 +5,7 @@
 
 # pylint: disable=too-few-public-methods
 
-"""Driloadder Command Line Interface
+"""Driloader Command Line Interface
    Using Google Python Style Guide:
    http://google.github.io/styleguide/pyguide.html
 """
@@ -42,8 +42,8 @@ class CliError(Exception):
         return 'Error: {}.\nCause: {}'.format(self.args[0], self.cause)
 
 
-class DriloadderCommands():
-    """Class that accts as facade to BrowserDetection"""
+class DriloaderCommands():
+    """A facade to BrowserDetection"""
 
     def __init__(self):
         """Init method
@@ -157,7 +157,6 @@ def parse_args():
         A string argument from stdin.
     Raises:
         None
-    TODO (jonathadv): Implement --verbose mode support.
     """
 
     parser = argparse.ArgumentParser()
@@ -185,7 +184,7 @@ def parse_args():
             return key
 
 
-def display_outout(message, output_type=OutputType.INFO):
+def display_output(message, output_type=OutputType.INFO):
     """ Display Output
     Displays an output message to the correct file descriptor (STDIN or STDOUT) and exits
     the script based on the type sent as parameter.
@@ -198,7 +197,6 @@ def display_outout(message, output_type=OutputType.INFO):
         None
     Raises:
         None
-    TODO (jonathadv): Implement `--verbose mode` support.
     """
 
     if output_type == OutputType.INFO:
@@ -221,7 +219,7 @@ def main():
     Responsible for:
         - call the check_python_version() function.
         - call the parse_args() function and get the parameter sent from stdin.
-        - instantiate the DriloadderCommands class and call its methods based
+        - instantiate the DriloaderCommands class and call its methods based
         on the argparser input.
     Args:
     Returns:
@@ -232,10 +230,10 @@ def main():
     try:
         check_python_version()
     except CliError as cli_error:
-        display_outout(str(cli_error), OutputType.ERROR)
+        display_output(str(cli_error), OutputType.ERROR)
 
     option = parse_args()
-    commands = DriloadderCommands()
+    commands = DriloaderCommands()
     options = {
         'chrome': commands.get_google_chrome_version,
         'firefox': commands.get_firefox_version,
@@ -249,9 +247,9 @@ def main():
         message = result
 
     except CliError as cli_error:
-        display_outout(str(cli_error), OutputType.ERROR)
+        display_output(str(cli_error), OutputType.ERROR)
 
-    display_outout(message, OutputType.INFO)
+    display_output(message, OutputType.INFO)
 
 
 if __name__ == '__main__':
