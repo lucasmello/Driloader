@@ -1,2 +1,2 @@
 include README.*
-include Driloader/*.ini
+include driloader/*.ini

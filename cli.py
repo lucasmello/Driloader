@@ -12,10 +12,9 @@
 import sys
 import platform
 import argparse
-import Driloader
 
-from Driloader.browsers import GECKODRIVER, CHROMEDRIVER, IEDRIVER, Browser
-from Driloader.browser_detection import BrowserDetection, BrowserDetectionError
+from driloader.browsers import GECKODRIVER, CHROMEDRIVER, IEDRIVER, Browser
+from driloader.browser_detection import BrowserDetection, BrowserDetectionError
 
 
 class OutputType():

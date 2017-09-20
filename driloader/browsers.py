@@ -26,18 +26,18 @@ CHROME_SUPPORTED_VERSIONS = "----------ChromeDriver v((?:\d+\.?)+)"\
 class Browser:
     def __init__(self, driver, os_name):
         self.driver = driver
-        self.base_url = getConfig(self.driver, 'base_url')
-        self.version_instaled = self.get_isntaled_version()
+        self.base_url = get_config(self.driver, 'base_url')
+        self.version_installed = self.get_isntaled_version()
 
         self.version_latest = self.get_latest()
         self.version_suported = self.get_suported()
 
         if os_name == 'Windows':
-            self.file_name = getConfig(self.driver, 'unzipped_win')
-            self.file_name_zip = getConfig(self.driver, 'zip_file_win')
+            self.file_name = get_config(self.driver, 'unzipped_win')
+            self.file_name_zip = get_config(self.driver, 'zip_file_win')
         else:
-            self.file_name = getConfig(self.driver, 'unzipped_linux')
-            self.file_name_zip = getConfig(self.driver, 'zip_file_linux')
+            self.file_name = get_config(self.driver, 'unzipped_linux')
+            self.file_name_zip = get_config(self.driver, 'zip_file_linux')
 
     def get_latest(self):
         if self.driver == GECKODRIVER:
@@ -91,7 +91,6 @@ class Browser:
     def get_latest_chrome_driver_version(self):
         resp = requests.get("https://chromedriver.storage.googleapis.com/"
                             "LATEST_RELEASE")
-
         reg = re.search(PATTERN_SEARCH, resp.text)
         return float(reg.group(0))
 
@@ -99,21 +98,15 @@ class Browser:
         chrome_json_versions_path = os.path.join(os.path.abspath
                                                  (os.path.dirname(__file__)),
                                                  'version_matcher.json')
-
-        if os.path.isfile(chrome_json_versions_path) is not True:
-            self._mount_chrome_json()
+        if os.path.exists(chrome_json_versions_path):
+            os.remove(chrome_json_versions_path)
+        self._mount_chrome_json()
 
         config = json.load(open(chrome_json_versions_path))
         chrome_json = config.get("CHROME")
-
-        if str(self.version_latest) not in chrome_json.keys():
-            self._mount_chrome_json()
-            config = json.load(open(chrome_json_versions_path))
-            chrome_json = config.get("CHROME")
-
         for attr, value in chrome_json.items():
             r = range(int(value.get("from")), int(value.get("to")) + 1)
-            if self.version_instaled in r:
+            if self.version_installed in r:
                 return attr
 
 # GECKO DRIVER SECTION
@@ -123,17 +116,20 @@ class Browser:
         return reg.group(0)
 
     def _mount_chrome_json(self):
-        with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                               'version_matcher.json'), "w+") as conf:
+        current_path = os.path.abspath(os.path.dirname(__file__))
+        version_path = os.path.join(current_path, 'version_matcher.json')
+
+        with open(version_path, "w+") as conf:
+
+            chrome_json = {}
+            json_file = {"CHROME": {}}
 
             notes_url = CHROME_VERSIONS_URL \
                 .replace('{version}', str(self.version_latest))
 
             resp = requests.get(notes_url)
-            r = re.findall(CHROME_SUPPORTED_VERSIONS,
-                           resp.text)
-            chrome_json = {}
-            json_file = {"CHROME": {}}
+            r = re.findall(CHROME_SUPPORTED_VERSIONS, resp.text)
+
             for obj in r:
                 _from = obj[1].rpartition("-")[0]
                 _to = obj[1].rpartition("-")[2]
@@ -143,7 +139,7 @@ class Browser:
             conf.close()
 
 
-def getConfig(*args):
+def get_config(*args):
     config = ConfigParser()
     path = os.path.dirname(__file__)
     file = 'drivers_info.ini'
@@ -155,7 +151,7 @@ def getConfig(*args):
         return None
 
 
-def getSection(section):
+def get_section(section):
     config = ConfigParser()
     path = os.path.dirname(__file__)
     file = 'drivers_info.ini'
