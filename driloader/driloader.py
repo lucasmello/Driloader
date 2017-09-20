@@ -34,15 +34,17 @@ def download_driver(path_to_download, version, browser):
     download_url = download_url.replace("{version}", str(driver_version))
 
     if path_to_download == "default":
-        driver.drivers_path += str(driver.browser.driver) + os.sep
-        driver.drivers_path += str(driver_version)
+
+        driver.drivers_path += "{}{}{}".\
+            format(str(driver.browser.driver), os.sep, str(driver_version))
+
         if not os.path.exists(driver.drivers_path):
             os.makedirs(driver.drivers_path)
         full_path = driver.drivers_path + os.sep + file_name
     else:
         full_path = path_to_download + os.sep + file_name
 
-    if driver._check_driver_exist(full_path):
+    if driver._check_driver_exists(full_path):
         return full_path
 
     driver._download_file(download_url, full_path)

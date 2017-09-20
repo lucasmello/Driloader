@@ -57,7 +57,7 @@ class Downloader:
             os.remove(zip_file)
 
     @staticmethod
-    def _check_driver_exist(path_to_file):
+    def _check_driver_exists(path_to_file):
         return os.path.isfile(path_to_file)
 
     def _get_path(self, section):
