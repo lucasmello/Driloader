@@ -21,10 +21,12 @@ class Downloader:
             if not os.path.exists(drivers_path):
                 os.makedirs(drivers_path)
             import ctypes
-            ctypes.windll.kernel32.SetFileAttributesW(drivers_path, 2)  # This hides the folder in Windows.
+            # This hides the folder in Windows.
+            ctypes.windll.kernel32.SetFileAttributesW(drivers_path, 2)
             return drivers_path
         else:
-            hidden_name = drivers_path.replace("Drivers", ".Drivers")  # This hides the folder in Linux
+            # This hides the folder in Linux
+            hidden_name = drivers_path.replace("Drivers", ".Drivers")
             if not os.path.exists(hidden_name):
                 os.makedirs(hidden_name)
             return hidden_name
@@ -53,6 +55,10 @@ class Downloader:
             subprocess.Popen("tar -zxvf %s -C %s" % (zip_file, zip_file.rpartition("/")[0]), shell=True).wait()
         if delete_after_extract:
             os.remove(zip_file)
+
+    @staticmethod
+    def _check_driver_exist(path_to_file):
+        return os.path.isfile(path_to_file)
 
     def _get_path(self, section):
         """
