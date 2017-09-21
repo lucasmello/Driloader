@@ -51,5 +51,8 @@ def download_driver(path_to_download, version, browser):
     driver._unzip(full_path, driver.drivers_path, True)
     if sys.platform == "linux" and browser == CHROMEDRIVER:
         make_executable = "chmod +x {}{}{}".format(driver.drivers_path, os.sep, "chromedriver")
-        subprocess.run(make_executable, stdout=subprocess.PIPE, shell=True)
+        if int(sys.version[0]) == 3 and int(sys.version[2]) < 5:
+            subprocess.Popen(make_executable, stdout=subprocess.PIPE, shell=True)
+        else:
+            subprocess.run(make_executable, stdout=subprocess.PIPE, shell=True)
     return driver._get_path(driver.browser.driver)

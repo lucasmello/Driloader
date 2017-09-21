@@ -11,6 +11,7 @@
 import re
 import subprocess
 import platform
+import sys
 
 
 class BrowserDetectionError(Exception):
@@ -177,14 +178,19 @@ class BrowserDetection:
             command_array = command
 
         try:
-            cmd_result = subprocess.run(command_array, stdout=subprocess.PIPE)
+            if int(sys.version[0]) == 3 and int(sys.version[2]) < 5:
+                cmd_result = subprocess.check_output(command_array)
+            else:
+                cmd_result = subprocess.run(command_array, stdout=subprocess.PIPE)
 
-            if cmd_result.returncode == 0:
+            if (hasattr(cmd_result, "returncode") and cmd_result.returncode == 0)\
+                    or cmd_result is not None:
                 result = None
-                if isinstance(cmd_result.stdout, bytes):
-                    result = cmd_result.stdout.decode('utf-8')
+                stdout = cmd_result.stdout if hasattr(cmd_result, "stdout") else cmd_result
+                if isinstance(stdout, bytes):
+                    result = stdout.decode('utf-8')
                 else:
-                    result = cmd_result.stdout
+                    result = stdout
 
                 return result
             else:
