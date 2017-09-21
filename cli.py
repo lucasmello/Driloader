@@ -124,30 +124,6 @@ class DriloaderCommands():
 
         return result_message.format(ff_version, chrome_version, ie_version)
 
-def check_python_version():
-    """ Check Python Version
-    Verifies if the current Python version is compatible with this script's version.
-    Args:
-    Returns:
-        None
-    Raises:
-        CliError: Case Python version is less than needed.
-    """
-    acceptable_major = 3
-    acceptable_minor = 6
-    python_version = sys.version_info
-    message = 'Python {}.{} or later is required to run this script.'.\
-        format(acceptable_major, acceptable_minor)
-    cause = 'Your current version is {}.{}.'.format(python_version[0], python_version[1])
-
-    if python_version[0] >= acceptable_major:
-        if python_version[1] >= acceptable_minor:
-            return
-        else:
-            raise CliError(message, cause)
-    else:
-        raise CliError(message, cause)
-
 
 def parse_args():
     """ Parse Arguments
@@ -217,7 +193,6 @@ def display_output(message, output_type=OutputType.INFO):
 def main():
     """ Main Function
     Responsible for:
-        - call the check_python_version() function.
         - call the parse_args() function and get the parameter sent from stdin.
         - instantiate the DriloaderCommands class and call its methods based
         on the argparser input.
@@ -227,11 +202,7 @@ def main():
     Raises:
         None
     """
-    try:
-        check_python_version()
-    except CliError as cli_error:
-        display_output(str(cli_error), OutputType.ERROR)
-
+    
     option = parse_args()
     commands = DriloaderCommands()
     options = {
