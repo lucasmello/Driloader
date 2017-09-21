@@ -11,7 +11,8 @@
 import re
 import subprocess
 import platform
-import sys
+
+from .commands import Commands
 
 
 class BrowserDetectionError(Exception):
@@ -53,7 +54,7 @@ class BrowserDetection:
                'HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer', '/v', 'svcVersion']
 
         try:
-            output = self._run_command(cmd)
+            output = Commands.run(cmd)
             reg = re.search(self.pattern, str(output))
             str_version = reg.group(0)
             int_version = int(str_version.partition(".")[0])
@@ -73,14 +74,14 @@ class BrowserDetection:
 
         try:
             if self.os_name == "Linux":
-                str_version = self._run_command("google-chrome --product-version")
+                str_version = Commands.run("google-chrome --product-version")
 
             if self.os_name == "Windows":
                 app = 'C:\\\Program Files (x86)\\\Google\\\Chrome\\\Application\\\chrome.exe"'
                 cmd = ['wmic', 'datafile', 'where',
                        'name="{}'.format(app), 'get', 'Version', '/value']
 
-                result = self._run_command(cmd)
+                result = Commands.run(cmd)
                 res_reg = re.search(self.pattern, str(result))
                 str_version = res_reg.group(0)
 
@@ -106,7 +107,7 @@ class BrowserDetection:
                 output = subprocess.getoutput("firefox -v")
             elif self.os_name == "Windows":
                 ff_path = self._find_firefox_exe_in_registry()
-                output = self._run_command([ff_path, '-v', '|', 'more'])
+                output = Commands.run([ff_path, '-v', '|', 'more'])
 
             if output is not None:
                 out_reg = re.search(self.pattern, str(output))
@@ -156,45 +157,3 @@ class BrowserDetection:
             return ""
 
         return shlex.split(command)[0]
-
-    @staticmethod
-    def _run_command(command):
-        """ Run command.
-        Runs any command sent as parameter and returns its stdout
-        in case of success.
-        Args:
-            command: Can be a string or string list containing a command line.
-            For example: "ls -l" and "firefox" or ['ls', '-l'] and ['firefox']
-        Returns:
-            Returns an string with the command stdout.
-        Raises:
-            Exception: The command was not found.
-            Exception: The command was found but failed.
-        TODO (jonathadv): Create specific exceptions.
-        """
-        if isinstance(command, str):
-            command_array = command.split(" ")
-        else:
-            command_array = command
-
-        try:
-            if int(sys.version[0]) == 3 and int(sys.version[2]) < 5:
-                cmd_result = subprocess.check_output(command_array)
-            else:
-                cmd_result = subprocess.run(command_array, stdout=subprocess.PIPE)
-
-            if (hasattr(cmd_result, "returncode") and cmd_result.returncode == 0)\
-                    or cmd_result is not None:
-                result = None
-                stdout = cmd_result.stdout if hasattr(cmd_result, "stdout") else cmd_result
-                if isinstance(stdout, bytes):
-                    result = stdout.decode('utf-8')
-                else:
-                    result = stdout
-
-                return result
-            else:
-                raise Exception("Command \"{}\" failed!".format(" ".join(command)))
-
-        except FileNotFoundError:
-            raise Exception("Command \"{}\" not found!".format(" ".join(command)))

@@ -55,7 +55,7 @@ class Browser:
         if self.driver == IEDRIVER:
             return self.version_latest
 
-    def get_isntaled_version(self):
+    def get_instaled_version(self):
         browser = BrowserDetection()
         if self.driver == GECKODRIVER:
             return browser.get_firefox_version()
