@@ -116,8 +116,10 @@ class Browser:
         return reg.group(0)
 
     def _mount_chrome_json(self):
-        current_path = os.path.abspath(os.path.dirname(__file__))
-        version_path = os.path.join(current_path, 'version_matcher.json')
+        json_path = os.path.expanduser('~{0}Driloader{0}Configs{0}'.format(os.sep))
+        if not os.path.exists(json_path):
+            os.makedirs(json_path)
+        version_path = os.path.join(json_path, 'version_matcher.json')
 
         with open(version_path, "w+") as conf:
 
