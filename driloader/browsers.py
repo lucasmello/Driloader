@@ -28,7 +28,7 @@ class Browser:
         self.driver = driver
         self.base_url = get_config(self.driver, 'base_url')
         self.version_installed = self.get_installed_version()
-
+        self.version_matcher_path = self.get_chrome_version_matcher_path()
         self.version_latest = self.get_latest()
         self.version_supported = self.get_supported()
 
@@ -38,6 +38,13 @@ class Browser:
         else:
             self.file_name = get_config(self.driver, 'unzipped_linux')
             self.file_name_zip = get_config(self.driver, 'zip_file_linux')
+
+    @staticmethod
+    def get_chrome_version_matcher_path():
+        json_path = os.path.expanduser('~{0}Driloader{0}Configs{0}'.format(os.sep))
+        if not os.path.exists(json_path):
+            os.makedirs(json_path)
+        return os.path.join(json_path, 'version_matcher.json')
 
     def get_latest(self):
         if self.driver == GECKODRIVER:
@@ -95,14 +102,12 @@ class Browser:
         return float(reg.group(0))
 
     def get_supported_chrome_driver_version(self):
-        chrome_json_versions_path = os.path.join(os.path.abspath
-                                                 (os.path.dirname(__file__)),
-                                                 'version_matcher.json')
-        if os.path.exists(chrome_json_versions_path):
-            os.remove(chrome_json_versions_path)
+
+        if os.path.exists(self.version_matcher_path):
+            os.remove(self.version_matcher_path)
         self._mount_chrome_json()
 
-        config = json.load(open(chrome_json_versions_path))
+        config = json.load(open(self.version_matcher_path))
         chrome_json = config.get("CHROME")
         for attr, value in chrome_json.items():
             r = range(int(value.get("from")), int(value.get("to")) + 1)
@@ -116,12 +121,8 @@ class Browser:
         return reg.group(0)
 
     def _mount_chrome_json(self):
-        json_path = os.path.expanduser('~{0}Driloader{0}Configs{0}'.format(os.sep))
-        if not os.path.exists(json_path):
-            os.makedirs(json_path)
-        version_path = os.path.join(json_path, 'version_matcher.json')
 
-        with open(version_path, "w+") as conf:
+        with open(self.version_matcher_path, "w+") as conf:
 
             chrome_json = {}
             json_file = {"CHROME": {}}
