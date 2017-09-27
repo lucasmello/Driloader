@@ -22,7 +22,7 @@ def download_driver(path_to_download, version, browser):
     driver = Downloader(browser)
 
     if version == "autodetect":
-        driver_version = driver.browser.version_suported
+        driver_version = driver.browser.version_supported
     elif version == "latest":
         driver_version = driver.browser.version_latest
     else:
