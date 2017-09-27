@@ -27,10 +27,10 @@ class Browser:
     def __init__(self, driver, os_name):
         self.driver = driver
         self.base_url = get_config(self.driver, 'base_url')
-        self.version_installed = self.get_isntaled_version()
+        self.version_installed = self.get_installed_version()
 
         self.version_latest = self.get_latest()
-        self.version_suported = self.get_suported()
+        self.version_supported = self.get_supported()
 
         if os_name == 'Windows':
             self.file_name = get_config(self.driver, 'unzipped_win')
@@ -51,7 +51,7 @@ class Browser:
         if self.driver == GECKODRIVER:
             return self.version_latest
         if self.driver == CHROMEDRIVER:
-            return self.get_suported_chrome_driver_version()
+            return self.get_supported_chrome_driver_version()
         if self.driver == IEDRIVER:
             return self.version_latest
 
@@ -94,7 +94,7 @@ class Browser:
         reg = re.search(PATTERN_SEARCH, resp.text)
         return float(reg.group(0))
 
-    def get_suported_chrome_driver_version(self):
+    def get_supported_chrome_driver_version(self):
         chrome_json_versions_path = os.path.join(os.path.abspath
                                                  (os.path.dirname(__file__)),
                                                  'version_matcher.json')
