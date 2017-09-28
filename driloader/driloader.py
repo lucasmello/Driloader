@@ -1,6 +1,5 @@
 import sys
 import os
-import subprocess
 from .downloader import Downloader
 from .browsers import CHROMEDRIVER, GECKODRIVER, IEDRIVER
 from .commands import Commands
@@ -28,10 +27,13 @@ def download_driver(path_to_download, version, browser):
     else:
         driver_version = version
 
-    file_name = driver.browser.file_name_zip
-    file_name = file_name.replace('{version}', str(driver_version))
+    unzipped_path = "{0}{1}{2}{3}{2}{4}".format(driver.get_default_path(), driver.browser.driver, os.sep, driver_version,
+                                                driver.browser.file_name)
 
-    download_url = "{}{}".format(driver.browser.base_url, file_name)
+    file_name_zipped = driver.browser.file_name_zip
+    file_name_zipped = file_name_zipped.replace('{version}', str(driver_version))
+
+    download_url = "{}{}".format(driver.browser.base_url, file_name_zipped)
     download_url = download_url.replace("{version}", str(driver_version))
 
     if path_to_download == "default":
@@ -41,16 +43,17 @@ def download_driver(path_to_download, version, browser):
 
         if not os.path.exists(driver.drivers_path):
             os.makedirs(driver.drivers_path)
-        full_path = driver.drivers_path + os.sep + file_name
+        full_path = driver.drivers_path + os.sep + file_name_zipped
     else:
-        full_path = path_to_download + os.sep + file_name
+        full_path = path_to_download + os.sep + file_name_zipped
+        unzipped_path = "{}{}{}".format(path_to_download, os.sep, driver.browser.file_name)
 
-    if driver._check_driver_exists(full_path):
-        return full_path
+    if driver.check_driver_exists(unzipped_path):
+        return unzipped_path
 
-    driver._download_file(download_url, full_path)
-    driver._unzip(full_path, driver.drivers_path, True)
+    driver.download_file(download_url, full_path)
+    driver.unzip(full_path, driver.drivers_path, True)
     if sys.platform == "linux" and browser == CHROMEDRIVER:
         make_executable = "chmod +x {}{}{}".format(driver.drivers_path, os.sep, "chromedriver")
         Commands.run(make_executable)
-    return driver._get_path(driver.browser.driver)
+    return unzipped_path

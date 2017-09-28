@@ -5,6 +5,7 @@ import requests
 import subprocess
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
+from driloader.commands import Commands
 from .browsers import Browser
 
 
@@ -32,15 +33,18 @@ class Downloader:
             return hidden_name
 
     @staticmethod
-    def _download_file(url, path_to_download):
+    def download_file(url, path_to_download):
         if not os.path.exists(path_to_download):
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
             response = requests.get(url, verify=False)
+            path = path_to_download.rpartition("/")[0]
+            if not os.path.exists(path):
+                os.makedirs(path)
             with open(path_to_download, "wb") as f:
                 f.write(response.content)
 
     @staticmethod
-    def _unzip(zip_file, path_to_extract, delete_after_extract=False):
+    def unzip(zip_file, path_to_extract, delete_after_extract=False):
         """
         Extract a 'zip' or 'gz' file content to the same path as file is in.
         :param zip_file: file to be extracted.
@@ -52,18 +56,18 @@ class Downloader:
             zfile.extractall(path_to_extract)
             zfile.close()
         if zip_file.endswith("gz"):
-            subprocess.Popen("tar -zxvf %s -C %s" % (zip_file, zip_file.rpartition("/")[0]), shell=True).wait()
+            # subprocess.Popen("tar -zxvf %s -C %s" % (zip_file, zip_file.rpartition("/")[0]), shell=True).wait()
+            Commands.run("tar -zxvf {} -C {}".format(zip_file, zip_file.rpartition("/")[0]))
         if delete_after_extract:
             os.remove(zip_file)
 
     @staticmethod
-    def _check_driver_exists(path_to_file):
+    def check_driver_exists(path_to_file):
         return os.path.isfile(path_to_file)
 
-    def _get_path(self, section):
+    def get_default_path(self):
         """
         Get the full unzipped file's path.
-        :param section: drivers_info.ini section.
         :return: unzipped file's path.
         """
-        return "%s%s%s" % (self.drivers_path, os.sep, self.browser.file_name)
+        return self.drivers_path
