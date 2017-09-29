@@ -46,7 +46,7 @@ test: install
 # Run pylint
 lint: install
 	@echo '[pylint] Running linter.'
-	$(call run_in_venv,pylint cli.py driloader)
+	$(call run_in_venv,pylint cli.py driloader || true)
 	@echo
 
 
