@@ -1,5 +1,7 @@
 import subprocess
 
+class CommandError(Exception):
+    pass
 
 class Commands:
     @staticmethod
@@ -39,7 +41,7 @@ class Commands:
 
                 return result
             else:
-                raise Exception("Command \"{}\" failed!".format(" ".join(command)))
+                raise CommandError("Command \"{}\" failed!".format(" ".join(command)))
 
         except FileNotFoundError:
-            raise Exception("Command \"{}\" not found!".format(" ".join(command)))
+            raise CommandError("Command \"{}\" not found!".format(" ".join(command)))
