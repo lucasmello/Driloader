@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+
+# pylint: disable=too-few-public-methods
+
+"""Abstraction for all external commands calls
+
+"""
+
 import subprocess
 
 class CommandError(Exception):

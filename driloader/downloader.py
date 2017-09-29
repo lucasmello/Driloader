@@ -2,7 +2,6 @@ import platform
 import os
 import zipfile
 import requests
-import subprocess
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from driloader.commands import Commands
@@ -40,8 +39,8 @@ class Downloader:
             path = path_to_download.rpartition("/")[0]
             if not os.path.exists(path):
                 os.makedirs(path)
-            with open(path_to_download, "wb") as f:
-                f.write(response.content)
+            with open(path_to_download, "wb") as file:
+                file.write(response.content)
 
     @staticmethod
     def unzip(zip_file, path_to_extract, delete_after_extract=False):
@@ -56,7 +55,6 @@ class Downloader:
             zfile.extractall(path_to_extract)
             zfile.close()
         if zip_file.endswith("gz"):
-            # subprocess.Popen("tar -zxvf %s -C %s" % (zip_file, zip_file.rpartition("/")[0]), shell=True).wait()
             Commands.run("tar -zxvf {} -C {}".format(zip_file, zip_file.rpartition("/")[0]))
         if delete_after_extract:
             os.remove(zip_file)

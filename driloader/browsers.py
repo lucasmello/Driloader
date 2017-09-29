@@ -1,9 +1,20 @@
+# -*- coding: utf-8 -*-
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+
+# pylint: disable=anomalous-backslash-in-string
+
+"""Browsers
+A abstraction of a Browser
+"""
+
 from configparser import ConfigParser
 import os
 import json
-import requests
-import xml.etree.ElementTree as ET
 import re
+import xml.etree.ElementTree as ET
+
+import requests
+
 
 from .browser_detection import BrowserDetection
 
@@ -131,9 +142,9 @@ class Browser:
                 .replace('{version}', str(self.version_latest))
 
             resp = requests.get(notes_url)
-            r = re.findall(CHROME_SUPPORTED_VERSIONS, resp.text)
+            result = re.findall(CHROME_SUPPORTED_VERSIONS, resp.text)
 
-            for obj in r:
+            for obj in result:
                 _from = obj[1].rpartition("-")[0]
                 _to = obj[1].rpartition("-")[2]
                 chrome_json[obj[0]] = {"from": _from, "to": _to}
