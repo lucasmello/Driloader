@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+
+# pylint: disable=no-member
+# pylint: disable=import-error
+
+"""Downloader
+Class which performs the driver download
+"""
+
 import os
 import platform
 import zipfile
