@@ -10,10 +10,8 @@
    http://google.github.io/styleguide/pyguide.html
 """
 import sys
-import platform
 import argparse
 
-from driloader.browsers import GECKODRIVER, CHROMEDRIVER, IEDRIVER, Browser
 from driloader.browser_detection import BrowserDetection, BrowserDetectionError
 
 
@@ -30,6 +28,7 @@ class OutputType():
 
 class CliError(Exception):
     """ CliError """
+
     def __init__(self, message, cause):
         """Init method
         Sets superclass arguments up.
@@ -46,9 +45,7 @@ class DriloaderCommands():
     """A facade to BrowserDetection"""
 
     def __init__(self):
-        """Init method
-        """
-        self.os = platform.system()
+        """Init method"""
         self.detection = BrowserDetection()
 
     def get_google_chrome_version(self):
@@ -202,7 +199,7 @@ def main():
     Raises:
         None
     """
-    
+
     option = parse_args()
     commands = DriloaderCommands()
     options = {

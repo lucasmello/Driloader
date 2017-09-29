@@ -1,7 +1,27 @@
+# -*- coding: utf-8 -*-
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+
+# pylint: disable=too-few-public-methods
+
+"""Abstraction for all external commands calls
+
+"""
+
 import subprocess
+
+class CommandError(Exception):
+    """ Custom exception class for Command """
+    pass
 
 
 class Commands:
+    """ A class to abstract all external commands calls.
+
+    The function run() abstracts the complexity of calling
+    subprocess.run() in versions >= 3.6  and subprocess.check_output() in versions < 3.6
+
+    """
+
     @staticmethod
     def run(command):
         """ Run command.
@@ -13,9 +33,8 @@ class Commands:
         Returns:
             Returns an string with the command stdout.
         Raises:
-            Exception: The command was not found.
-            Exception: The command was found but failed.
-        TODO (jonathadv): Create specific exceptions.
+            CommandError: The command was not found.
+            CommandError: The command was found but failed.
         """
         if isinstance(command, str):
             command_array = command.split(" ")
@@ -39,7 +58,7 @@ class Commands:
 
                 return result
             else:
-                raise Exception("Command \"{}\" failed!".format(" ".join(command)))
+                raise CommandError('Command "{}" failed!'.format(''.join(command)))
 
         except FileNotFoundError:
-            raise Exception("Command \"{}\" not found!".format(" ".join(command)))
+            raise CommandError('Command "{}" not found!'.format(''.join(command)))

@@ -27,8 +27,8 @@ def download_driver(path_to_download, version, browser):
     else:
         driver_version = version
 
-    unzipped_path = "{0}{1}{2}{3}{2}{4}".format(driver.get_default_path(), driver.browser.driver, os.sep, driver_version,
-                                                driver.browser.file_name)
+    unzipped_path = "{0}{1}{2}{3}{2}{4}".format(driver.get_default_path(), driver.browser.driver,
+                                                os.sep, driver_version, driver.browser.file_name)
 
     file_name_zipped = driver.browser.file_name_zip
     file_name_zipped = file_name_zipped.replace('{version}', str(driver_version))
