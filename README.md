@@ -1,6 +1,6 @@
 # Driloader
 
-[![pypi version](https://img.shields.io/pypi/v/driloader.svg)](https://pypi.python.org/pypi/driloader) [![license](https://img.shields.io/pypi/l/driloader.svg)](https://pypi.python.org/pypi/driloader) [![python versions](https://img.shields.io/pypi/pyversions/driloader.svg)](https://pypi.python.org/pypi/driloader) [![contributors](https://img.shields.io/github/contributors/lucasmello/Driloader.svg)](https://github.com/lucasmello/Driloader/graphs/contributors)
+[![pypi version](https://img.shields.io/pypi/v/driloader.svg)](https://pypi.python.org/pypi/driloader) [![license](https://img.shields.io/pypi/l/driloader.svg)](https://pypi.python.org/pypi/driloader) [![python versions](https://img.shields.io/pypi/pyversions/driloader.svg)](https://pypi.python.org/pypi/driloader) [![contributors](https://img.shields.io/github/contributors/lucasmello/Driloader.svg)](https://github.com/lucasmello/Driloader/graphs/contributors)[![Build Status](https://travis-ci.org/lucasmello/Driloader.svg?branch=master)](https://travis-ci.org/lucasmello/Driloader)
 
 Selenium drivers downloader tool with standalone CLI support.
 
