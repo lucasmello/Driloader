@@ -64,6 +64,13 @@ clean:
 	@echo
 
 
+# Sort imports as PEP8
+isort: install
+	@echo '[isort] Sorting imports following PEP8'
+	$(call run_in_venv, isort **/*.py)
+	@echo
+
+
 # Display this help
 help:
 	@ echo

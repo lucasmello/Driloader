@@ -8,9 +8,9 @@
    http://google.github.io/styleguide/pyguide.html
 """
 
+import platform
 import re
 import subprocess
-import platform
 
 from .commands import Commands
 

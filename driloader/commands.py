@@ -9,6 +9,7 @@
 
 import subprocess
 
+
 class CommandError(Exception):
     """ Custom exception class for Command """
     pass

@@ -6,3 +6,4 @@ urllib3==1.22
 pytest==3.2.2
 pytest-mock==1.6.3
 pylint==1.7.2
+isort>=4.2.15

@@ -1,8 +1,9 @@
-import sys
 import os
-from .downloader import Downloader
+import sys
+
 from .browsers import CHROMEDRIVER, GECKODRIVER, IEDRIVER
 from .commands import Commands
+from .downloader import Downloader
 
 
 def download_chrome_driver(path_to_download="default", version="autodetect"):
