@@ -1,3 +1,3 @@
 language: python
-install:
+script:
   - make test lint
