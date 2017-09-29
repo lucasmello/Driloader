@@ -77,9 +77,9 @@ class BrowserDetection:
                 str_version = Commands.run("google-chrome --product-version")
 
             if self.os_name == "Windows":
-                app = r'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"'
+                app = r'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
                 cmd = ['wmic', 'datafile', 'where',
-                       'name="{}'.format(app), 'get', 'Version', '/value']
+                       'name="{}"'.format(app), 'get', 'Version', '/value']
 
                 result = Commands.run(cmd)
                 res_reg = re.search(self.pattern, str(result))
