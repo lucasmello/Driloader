@@ -7,14 +7,13 @@
 A abstraction of a Browser
 """
 
-from configparser import ConfigParser
-import os
 import json
+import os
 import re
 import xml.etree.ElementTree as ET
+from configparser import ConfigParser
 
 import requests
-
 
 from .browser_detection import BrowserDetection
 

@@ -1,10 +1,12 @@
-import platform
 import os
+import platform
 import zipfile
+
 import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from driloader.commands import Commands
+
 from .browsers import Browser
 
 
