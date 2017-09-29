@@ -10,46 +10,66 @@ VENV_PATH = ./$(VENV_NAME)/bin/activate
 # The shell make should use
 SHELL = /bin/bash
 
+
 # Used when make is called with no target
 default: help
 
+
 # Create virtual env
 venv:
-	@echo "[venv] Creating virtual env from default python3 installation."
+	@echo '[venv] Creating virtual env from default python3 installation.'
 	virtualenv -p $(PYTHON_EXE) venv
+	@echo
+
+
+# Remove virtual env
+delvenv:
+	@echo '[delvenv] Removing virtual env.'
+	rm -rf ./$(VENV_NAME)
+	@echo
+
 
 # Install packages from requirements.txt
 install: venv
-	@echo "[install] Installing requirements."
-	@( \
-		source $(VENV_PATH); \
-		pip install -r requirements.txt; \
-	)
+	@echo '[install] Installing requirements.'
+	$(call run_in_venv, pip install -r requirements.txt)
+	@echo
+
 
 # Run tests with pytest
 test: install
-	@echo "[test] Running unit tests."
-	@( \
-		source $(VENV_PATH); \
-		pytest -s --verbose ./tests; \
-	)
+	@echo '[test] Running unit tests.'
+	$(call run_in_venv,pytest -s --verbose ./tests)
+	@echo
+
+
+# Run pylint
+lint: install
+	@echo '[pylint] Running linter.'
+	$(call run_in_venv,pylint cli.py driloader)
+	@echo
+
+
+# Create egg from source
+build: install
+	@echo '[build] Creating Python egg from source.'
+	$(call run_in_venv, python setup.py install)
+	@echo
+
 
 # Remove build files
 clean:
-	@echo "[clean] Removing build files."
-	@echo "TBD"
+	@echo '[clean] Removing build files.'
+	rm -rf build/ driloader.egg-info/
+	@echo
 
-# Remove virtual env
-del-venv:
-	@echo "[del-venv] Removing virtual env"
-	rm -rv ./$(VENV_NAME)
 
 # Display this help
 help:
 	@ echo
 	@ echo '  Usage:'
 	@ echo ''
-	@ echo '    make <target> [flags...]'
+	@ echo '	make <target> [flags...]'
 	@ echo ''
 	@ echo '  Targets:'
 	@ echo ''
@@ -59,3 +79,11 @@ help:
 	@ echo ''
 	@ awk '/^#/{ comment = substr($$0,3) } comment && /^[a-zA-Z][a-zA-Z0-9_-]+ ?\?=/{ print "   ", $$1, $$2, comment }' ./Makefile | column -t -s '?=' | sort
 	@ echo ''
+
+# Function to abastract virtual env calls inside bash
+define run_in_venv
+	@( \
+		source $(VENV_PATH); \
+		$(1); \
+	)
+endef
