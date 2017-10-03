@@ -178,4 +178,7 @@ def get_section(section):
     file_path = os.path.join(path, file)
     config.read(file_path)
 
-    return config.get(section)
+    try:
+        return config[section]
+    except KeyError:
+        return None
