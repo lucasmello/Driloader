@@ -111,14 +111,14 @@ class Browser:
         return last_version
 
 # CHROME DRIVER SECTION
-    def get_latest_chrome_driver(self):
+    @staticmethod
+    def get_latest_chrome_driver():
         resp = requests.get('https://chromedriver.storage.googleapis.com/'
                             'LATEST_RELEASE')
         reg = re.search(PATTERN_SEARCH, resp.text)
         return float(reg.group(0))
 
     def get_supported_chrome_driver(self):
-
         if os.path.exists(self.version_matcher_path):
             os.remove(self.version_matcher_path)
         self._mount_chrome_json()
@@ -131,7 +131,8 @@ class Browser:
                 return attr
 
 # GECKO DRIVER SECTION
-    def get_latest_gecko_driver(self):
+    @staticmethod
+    def get_latest_gecko_driver():
         resp = requests.get(GECKO_LATEST_VERSION_URL)
         reg = re.search(r'\d{1,2}[\d.]+', resp.url.rpartition('/')[2])
         return reg.group(0)
@@ -176,6 +177,7 @@ def get_section(section):
     file = 'drivers_info.ini'
     file_path = os.path.join(path, file)
     config.read(file_path)
+
     try:
         return config[section]
     except KeyError:
