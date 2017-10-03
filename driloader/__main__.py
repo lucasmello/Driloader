@@ -12,7 +12,7 @@
 import sys
 import argparse
 
-from driloader.browser_detection import BrowserDetection, BrowserDetectionError
+from .browser_detection import BrowserDetection, BrowserDetectionError
 
 
 class OutputType():
@@ -132,7 +132,7 @@ def parse_args():
         None
     """
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog="driloader")
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument('--firefox', '-f',
                         help='get Firefox version.',

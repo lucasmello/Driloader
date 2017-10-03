@@ -54,10 +54,9 @@ browser.quit()
 
 ## CLI and standalone usage
 ```bash
-chmod +x cli.py
-./cli.py -h
+python -m driloader
 
-usage: cli.py [-h] (--firefox | --chrome | --internet-explorer | --all)
+usage: driloader [-h] (--firefox | --chrome | --internet-explorer | --all)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -69,25 +68,25 @@ optional arguments:
 ```
 ### Retrieve Firefox version
 ```bash
-$  ./cli.py --firefox
+$  python -m driloader --firefox
 45
 ```
 
 ### Retrieve Google Chrome version
 ```bash
-$  ./cli.py --chrome
+$  python -m driloader --chrome
 58
 ```
 
 ### Retrieve Internet Explorer version (Windows system)
 ```cmd
-> cli.py -i
+> python -m driloader -i
 11
 ```
 
 ### Retrieve all browsers version (Windows system)
 ```bash
-> cli.py --all
+> python -m driloader --all
 Internet Explorer: 11
 Firefox: 45
 Google Chrome: 58
@@ -97,7 +96,7 @@ Google Chrome: 58
 ### Retrieve all browsers version (non-Windows system)
 ```bash
 # Getting from a non-Windows system
-$  ./cli.py --all
+$  python -m driloader --all
 Internet Explorer: Error: Unable to get the Internet Explorer version.
         Cause: Error: Unable to retrieve IE version..
         Cause: System is not Windows.
