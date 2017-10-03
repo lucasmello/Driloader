@@ -3,10 +3,13 @@
 
 # pylint: disable=anomalous-backslash-in-string
 
-"""Browser Detection
-   Using Google Python Style Guide:
-   http://google.github.io/styleguide/pyguide.html
 """
+driloader.browser_detection
+---------------------------
+
+Module with functions to detect the browser version.
+"""
+
 
 import platform
 import re

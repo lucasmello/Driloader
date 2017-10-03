@@ -3,15 +3,19 @@
 
 # pylint: disable=too-many-instance-attributes
 
-"""Browsers
-A abstraction of a Browser
 """
+driloader.browsers
+---------------------------
+
+Module to abstract browser information.
+"""
+
 
 import json
 import os
 import re
 import xml.etree.ElementTree as ET
-from configparser import ConfigParser
+from configparser import ConfigParser, NoSectionError
 
 import requests
 
@@ -34,6 +38,7 @@ CHROME_SUPPORTED_VERSIONS = r'----------ChromeDriver v((?:\d+\.?)+)'\
 
 
 class Browser:
+    """Abstracts the browser information based on OS and driver."""
     def __init__(self, driver, os_name):
         self.driver = driver
         self.base_url = get_config(self.driver, 'base_url')
@@ -99,7 +104,7 @@ class Browser:
                 version_str = version_nbr.group(0)
             try:
                 version = float(version_str) if version_str is not None else 0
-            except Exception:
+            except ValueError:
                 version = 0
             if version > last_version:
                 last_version = version
@@ -121,8 +126,8 @@ class Browser:
         config = json.load(open(self.version_matcher_path))
         chrome_json = config.get('CHROME')
         for attr, value in chrome_json.items():
-            r = range(int(value.get('from')), int(value.get('to')) + 1)
-            if self.version_installed in r:
+            version_range = range(int(value.get('from')), int(value.get('to')) + 1)
+            if self.version_installed in version_range:
                 return attr
 
 # GECKO DRIVER SECTION
@@ -161,7 +166,7 @@ def get_config(section, option):
     config.read(file_path)
     try:
         return config.get(section, option)
-    except Exception:
+    except NoSectionError:
         return None
 
 
@@ -173,5 +178,5 @@ def get_section(section):
     config.read(file_path)
     try:
         return config[section]
-    except Exception:
+    except KeyError:
         return None

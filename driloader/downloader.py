@@ -4,9 +4,13 @@
 # pylint: disable=no-member
 # pylint: disable=import-error
 
-"""Downloader
-Class which performs the driver download
 """
+driloader.downloader
+--------------------
+
+Module which performs the driver download.
+"""
+
 
 import os
 import platform
