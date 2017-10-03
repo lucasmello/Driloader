@@ -3,9 +3,13 @@
 
 # pylint: disable=too-few-public-methods
 
-"""Abstraction for all external commands calls
-
 """
+driloader.commands
+------------------
+
+Abstraction for all external command calls.
+"""
+
 
 import subprocess
 

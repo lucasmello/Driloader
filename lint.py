@@ -2,7 +2,7 @@ import sys
 
 from pylint.lint import Run
 
-min_score = 8.5
+min_score = 9.5
 
 results = Run(['cli.py', 'driloader'], exit=False)
 global_note = results.linter.stats['global_note']

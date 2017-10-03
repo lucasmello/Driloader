@@ -1,3 +1,14 @@
+# -*- coding: utf-8 -*-
+# vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
+
+"""
+driloader.driloader
+-------------------
+
+Module which abstracts the main Driloader functions.
+"""
+
+
 import os
 import sys
 
