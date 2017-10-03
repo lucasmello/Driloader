@@ -178,4 +178,4 @@ def get_section(section):
     file_path = os.path.join(path, file)
     config.read(file_path)
 
-    return config[section]
+    return config.get(section)
