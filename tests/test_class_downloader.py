@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
-# Disabling the below pylint warnings in order to use long names convention to tests
-# and because pytest and pytest_mock imports are used seamlessly.
+# Disabling the below pylint warnings in order to use long names convention in the tests
+# and because some entities are used seamlessly instead of being directly called.
 
 # pylint: disable=invalid-name
 # pylint: disable=unused-import
+# pylint: disable=unused-argument
 # pylint: disable=too-few-public-methods
-
 
 
 """
