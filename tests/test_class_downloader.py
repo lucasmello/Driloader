@@ -34,7 +34,19 @@ class TestDownloader:
     """ Test Downloader by mocking the requests calls """
 
     @staticmethod
-    def test_download_driver_file(mocker):
+    @pytest.fixture()
+    def mock_system(mocker):
+        """ Fixture to mock the main functions Downloader class
+            depends on in order to avoid mocke them in every new test.
+        """
+        mocker.patch('platform.system', return_value='Windows')
+        mocker.patch('driloader.browsers.Browser.__init__', return_value=None)
+        mocker.patch('driloader.downloader.Downloader._create_driver_folder',
+                     return_value='hidden_name')
+
+
+    @staticmethod
+    def test_download_driver_file(mock_system, mocker):
         """ Test the download of a file by mocking the
             requests.Response object as a text file with a random number.
 
@@ -44,23 +56,18 @@ class TestDownloader:
             Using IEDRIVER and mocking the needed functions from driloader.browsers
             to ensure the mocking would take care of all real system information.
 
-            This test takes usually longer than 1s, probably because of IO operations
+            This test takes usually longer than a few ms, probably because of IO operations
             run in downloader.download_file().
         """
 
         mocked_response = str(random.random())
-        mock_file_name = './test_driver_downloader.txt'
+        mock_file_name = './mocked_downloaded_file'
 
         mocker.patch.object(Response, 'content')
         Response.content = bytes(mocked_response, 'UTF-8')
 
-        mocker.patch('platform.system', return_value='Windows')
-        mocker.patch('driloader.browsers.Browser.__init__', return_value=None)
-        mocker.patch('driloader.downloader.Downloader._create_driver_folder',
-                     return_value='hidden_name')
-
         downloader = Downloader(IEDRIVER)
-        downloader.download_file('http://test.com', mock_file_name)
+        downloader.download_file('http://test.driver.io', mock_file_name)
 
         with open(mock_file_name, 'r') as file:
             file_content = file.read()
