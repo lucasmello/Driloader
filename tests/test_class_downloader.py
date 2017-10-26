@@ -3,11 +3,10 @@ import random
 
 import pytest
 import pytest_mock
-
 from requests import Response
 
+from driloader.browsers import CHROMEDRIVER, GECKODRIVER, IEDRIVER
 from driloader.downloader import Downloader
-from driloader.browsers import GECKODRIVER, CHROMEDRIVER, IEDRIVER
 
 
 def test_download_driver_file(mocker):

@@ -9,8 +9,8 @@
    Using Google Python Style Guide:
    http://google.github.io/styleguide/pyguide.html
 """
-import sys
 import argparse
+import sys
 
 from .browser_detection import BrowserDetection, BrowserDetectionError
 
