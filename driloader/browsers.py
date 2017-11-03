@@ -56,12 +56,20 @@ class Browser:
 
     @staticmethod
     def get_chrome_version_matcher_path():
+        """
+        Gets or creates the version_matcher file to put the chrome driver versions.
+        :return: the full file's path.
+        """
         json_path = os.path.expanduser('~{0}Driloader{0}Configs{0}'.format(os.sep))
         if not os.path.exists(json_path):
             os.makedirs(json_path)
         return os.path.join(json_path, 'version_matcher.json')
 
     def get_latest(self):
+        """
+        Gets the latest version of the driver.
+        :return: the latest version of the driver.
+        """
         if self.driver == GECKODRIVER:
             return self.get_latest_gecko_driver()
         if self.driver == CHROMEDRIVER:
@@ -70,6 +78,10 @@ class Browser:
             return self.get_latest_ie_driver()
 
     def get_supported(self):
+        """
+        Gets the supported version of the driver.
+        :return: the supported version.
+        """
         if self.driver == GECKODRIVER:
             return self.version_latest
         if self.driver == CHROMEDRIVER:
@@ -78,6 +90,10 @@ class Browser:
             return self.version_latest
 
     def get_installed_version(self):
+        """
+        Gets the installed version.
+        :return: the installed version.
+        """
         browser = BrowserDetection()
         if self.driver == GECKODRIVER:
             return browser.get_firefox_version()
@@ -89,6 +105,10 @@ class Browser:
 # IE DRIVER SECTION
     @staticmethod
     def get_latest_ie_driver():
+        """
+        Gets the latest ie driver version.
+        :return: the latest ie driver version.
+        """
         resp = requests.get('http://selenium-release.storage.googleapis.com/')
 
         xml_dl = ET.fromstring(resp.text)
@@ -113,12 +133,20 @@ class Browser:
 # CHROME DRIVER SECTION
     @staticmethod
     def get_latest_chrome_driver():
+        """
+        Gets the latest chrome driver version.
+        :return: the latest chrome driver version.
+        """
         resp = requests.get('https://chromedriver.storage.googleapis.com/'
                             'LATEST_RELEASE')
         reg = re.search(PATTERN_SEARCH, resp.text)
         return float(reg.group(0))
 
     def get_supported_chrome_driver(self):
+        """
+        Gets the right version to the installed version.
+        :return: the right version to work with installed browser.
+        """
         if os.path.exists(self.version_matcher_path):
             os.remove(self.version_matcher_path)
         self._mount_chrome_json()
@@ -133,12 +161,18 @@ class Browser:
 # GECKO DRIVER SECTION
     @staticmethod
     def get_latest_gecko_driver():
+        """
+        Gets the latest gecko driver version.
+        :return: the latest gecko driver version.
+        """
         resp = requests.get(GECKO_LATEST_VERSION_URL)
         reg = re.search(r'\d{1,2}[\d.]+', resp.url.rpartition('/')[2])
         return reg.group(0)
 
     def _mount_chrome_json(self):
-
+        """
+        Creates the file that matches the version with installed chrome.
+        """
         with open(self.version_matcher_path, 'w+') as conf:
 
             chrome_json = {}
@@ -160,6 +194,12 @@ class Browser:
 
 
 def get_config(section, option):
+    """
+    Get the config from drivers_info.ini file.
+    :param section: the file's section.
+    :param option: the option to get the value from.
+    :return: the option's value.
+    """
     config = ConfigParser()
     path = os.path.dirname(__file__)
     file = 'drivers_info.ini'
@@ -172,6 +212,11 @@ def get_config(section, option):
 
 
 def get_section(section):
+    """
+    Gets the entire section of drivers_info.ini file.
+    :param section: the file's section.
+    :return: the entire section.
+    """
     config = ConfigParser()
     path = os.path.dirname(__file__)
     file = 'drivers_info.ini'

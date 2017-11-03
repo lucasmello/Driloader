@@ -26,12 +26,20 @@ from .browsers import Browser
 
 class Downloader:
 
+    """
+    Contains methods to handle file downloading and some assertions.
+    """
+
     def __init__(self, driver):
         self.os_name = platform.system()
         self.drivers_path = self._create_driver_folder()
         self.browser = Browser(driver, self.os_name)
 
     def _create_driver_folder(self):
+        """
+        Creates a folder to put the drivers and hides it.
+        :return: the folder path.
+        """
         drivers_path = os.path.expanduser('~{0}Driloader{0}Drivers{0}'.format(os.sep))
         if self.os_name == "Windows":
             if not os.path.exists(drivers_path):
@@ -48,10 +56,16 @@ class Downloader:
             return hidden_name
 
     @staticmethod
-    def download_file(url, path_to_download):
+    def download_file(url, path_to_download, proxy):
+        """
+        Downloads a file.
+        :param url: download URL of the file.
+        :param path_to_download: the path to download the file.
+        :param proxy: a Dict with proxies configurations.
+        """
         if not os.path.exists(path_to_download):
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-            response = requests.get(url, verify=False)
+            response = requests.get(url, verify=False, proxies=proxy)
             path = path_to_download.rpartition("/")[0]
             if not os.path.exists(path):
                 os.makedirs(path)
@@ -77,6 +91,11 @@ class Downloader:
 
     @staticmethod
     def check_driver_exists(path_to_file):
+        """
+        Checks if the driver exists.
+        :param path_to_file: the file to be checked.
+        :return: True if file exists, otherwise False.
+        """
         return os.path.isfile(path_to_file)
 
     def get_default_path(self):
