@@ -17,19 +17,19 @@ from .commands import Commands
 from .downloader import Downloader
 
 
-def download_chrome_driver(path_to_download="default", version="autodetect"):
-    return download_driver(path_to_download, version, CHROMEDRIVER)
+def download_chrome_driver(path_to_download="default", version="autodetect", proxy={}):
+    return download_driver(path_to_download, version, CHROMEDRIVER, proxy)
 
 
-def download_gecko_driver(path_to_download="default", version="autodetect"):
-    return download_driver(path_to_download, version, GECKODRIVER)
+def download_gecko_driver(path_to_download="default", version="autodetect", proxy={}):
+    return download_driver(path_to_download, version, GECKODRIVER, proxy)
 
 
-def download_ie_driver(path_to_download="default", version="autodetect"):
-    return download_driver(path_to_download, version, IEDRIVER)
+def download_ie_driver(path_to_download="default", version="autodetect", proxy={}):
+    return download_driver(path_to_download, version, IEDRIVER, proxy)
 
 
-def download_driver(path_to_download, version, browser):
+def download_driver(path_to_download, version, browser, proxy):
     driver = Downloader(browser)
 
     if version == "autodetect":
@@ -63,7 +63,7 @@ def download_driver(path_to_download, version, browser):
     if driver.check_driver_exists(unzipped_path):
         return unzipped_path
 
-    driver.download_file(download_url, full_path)
+    driver.download_file(download_url, full_path, proxy)
     driver.unzip(full_path, driver.drivers_path, True)
     if sys.platform == "linux" and browser == CHROMEDRIVER:
         make_executable = "chmod +x {}{}{}".format(driver.drivers_path, os.sep, "chromedriver")

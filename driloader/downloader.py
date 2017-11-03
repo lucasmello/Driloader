@@ -48,10 +48,10 @@ class Downloader:
             return hidden_name
 
     @staticmethod
-    def download_file(url, path_to_download):
+    def download_file(url, path_to_download, proxy):
         if not os.path.exists(path_to_download):
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-            response = requests.get(url, verify=False)
+            response = requests.get(url, verify=False, proxy=proxy)
             path = path_to_download.rpartition("/")[0]
             if not os.path.exists(path):
                 os.makedirs(path)
