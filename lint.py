@@ -4,7 +4,7 @@ from pylint.lint import Run
 
 min_score = 9.5
 
-results = Run(['driloader'], exit=False)
+results = Run(['driloader', 'tests'], exit=False)
 global_note = results.linter.stats['global_note']
 
 if global_note > min_score:
