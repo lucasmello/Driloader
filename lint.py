@@ -2,12 +2,12 @@ import sys
 
 from pylint.lint import Run
 
-min_score = 9.5
+min_score = 10
 
 results = Run(['driloader', 'tests'], exit=False)
 global_note = results.linter.stats['global_note']
 
-if global_note > min_score:
+if global_note >= min_score:
     print('Minimum score reached! min_score = {}'.format(str(min_score)))
 else:
     print('Minimum score not reached! min_score = {}'.format(str(min_score)))
