@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='driloader',
     version='1.1.7',
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests', '*.tests', '*.tests.*']),
     include_package_data=True,
     description='Driver downloader for Selenium',
     author='Lucas Trajano;Felipe Viegas;Jonatha Daguerre',
