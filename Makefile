@@ -39,7 +39,7 @@ install: venv
 # Run tests with pytest
 test: install
 	@echo '[test] Running unit tests.'
-	$(call run_in_venv,pytest -s --verbose ./tests)
+	$(call run_in_venv,pytest -s --verbose --durations=5 --cov=driloader ./tests)
 	@echo
 
 

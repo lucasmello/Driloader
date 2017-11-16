@@ -1,3 +1,3 @@
 language: python
 script:
-  - make test lint
+  - make lint test
