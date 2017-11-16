@@ -15,4 +15,4 @@ class Proxy:
         if Proxy.__instance is None:
             Proxy.__instance = object.__new__(cls)
         Proxy.__instance.proxy = proxy
-        return Proxy.__intance
+        return Proxy.__instance
