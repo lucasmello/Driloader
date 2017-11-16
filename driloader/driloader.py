@@ -15,6 +15,7 @@ import sys
 from .browsers import CHROMEDRIVER, GECKODRIVER, IEDRIVER
 from .commands import Commands
 from .downloader import Downloader
+from .proxy import Proxy
 
 
 def download_chrome_driver(path_to_download="default", version="autodetect", proxy=None):
@@ -59,6 +60,8 @@ def download_driver(path_to_download, version, browser, proxy):
     :param proxy: proxy Dict. e.g {'http': '1.2.3.4', 'https': '5.6.7.8'}
     :return: the full unzipped driver's path.
     """
+    if proxy:
+        Proxy.proxy = proxy
     driver = Downloader(browser)
 
     if version == "autodetect":
@@ -92,7 +95,7 @@ def download_driver(path_to_download, version, browser, proxy):
     if driver.check_driver_exists(unzipped_path):
         return unzipped_path
 
-    driver.download_file(download_url, full_path, proxy)
+    driver.download_file(download_url, full_path)
     driver.unzip(full_path, driver.drivers_path, True)
     if sys.platform == "linux" and browser == CHROMEDRIVER:
         make_executable = "chmod +x {}{}{}".format(driver.drivers_path, os.sep, "chromedriver")
