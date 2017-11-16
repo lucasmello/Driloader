@@ -1,3 +1,6 @@
+# pylint: disable=too-few-public-methods
+
+
 """
 Responsible to keep proxy configurations.
 """
