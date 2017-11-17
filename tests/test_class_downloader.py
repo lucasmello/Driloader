@@ -122,8 +122,7 @@ class TestDownloader:
         Response.content = bytes(mocked_response, 'UTF-8')
 
         downloader = Downloader(IEDRIVER)
-
-        downloader.download_file('http://test.driver.io', mock_file_name, None)
+        downloader.download_file('http://test.driver.io', mock_file_name)
 
         with open(mock_file_name, 'r') as file:
             file_content = file.read()

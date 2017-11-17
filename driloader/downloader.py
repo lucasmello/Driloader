@@ -22,6 +22,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from driloader.commands import Commands
 
 from .browsers import Browser
+from .proxy import Proxy
 
 
 class Downloader:
@@ -56,16 +57,15 @@ class Downloader:
             return hidden_name
 
     @staticmethod
-    def download_file(url, path_to_download, proxy):
+    def download_file(url, path_to_download):
         """
         Downloads a file.
         :param url: download URL of the file.
         :param path_to_download: the path to download the file.
-        :param proxy: a Dict with proxies configurations.
         """
         if not os.path.exists(path_to_download):
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-            response = requests.get(url, verify=False, proxies=proxy)
+            response = requests.get(url, verify=False, proxies=Proxy().urls)
             path = path_to_download.rpartition("/")[0]
             if not os.path.exists(path):
                 os.makedirs(path)
