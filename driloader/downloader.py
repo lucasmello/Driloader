@@ -65,7 +65,7 @@ class Downloader:
         """
         if not os.path.exists(path_to_download):
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-            response = requests.get(url, verify=False, proxies=Proxy().url)
+            response = requests.get(url, verify=False, proxies=Proxy().urls)
             path = path_to_download.rpartition("/")[0]
             if not os.path.exists(path):
                 os.makedirs(path)

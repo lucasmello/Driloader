@@ -111,7 +111,7 @@ class Browser:
         :return: the latest ie driver version.
         """
         resp = requests.get('http://selenium-release.storage.googleapis.com/',
-                            proxies=Proxy().url)
+                            proxies=Proxy().urls)
         xml_dl = ET.fromstring(resp.text)
         root = ET.ElementTree(xml_dl)
         tag = root.getroot().tag
@@ -139,7 +139,7 @@ class Browser:
         :return: the latest chrome driver version.
         """
         resp = requests.get('https://chromedriver.storage.googleapis.com/'
-                            'LATEST_RELEASE', proxies=Proxy().url)
+                            'LATEST_RELEASE', proxies=Proxy().urls)
         reg = re.search(PATTERN_SEARCH, resp.text)
         return float(reg.group(0))
 
@@ -166,7 +166,7 @@ class Browser:
         Gets the latest gecko driver version.
         :return: the latest gecko driver version.
         """
-        resp = requests.get(GECKO_LATEST_VERSION_URL, proxies=Proxy().url)
+        resp = requests.get(GECKO_LATEST_VERSION_URL, proxies=Proxy().urls)
         reg = re.search(r'\d{1,2}[\d.]+', resp.url.rpartition('/')[2])
         return reg.group(0)
 
@@ -182,7 +182,7 @@ class Browser:
             notes_url = CHROME_VERSIONS_URL \
                 .replace('{version}', str(self.version_latest))
 
-            resp = requests.get(notes_url, proxies=Proxy().url)
+            resp = requests.get(notes_url, proxies=Proxy().urls)
             result = re.findall(CHROME_SUPPORTED_VERSIONS, resp.text)
 
             for obj in result:

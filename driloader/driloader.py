@@ -57,11 +57,11 @@ def download_driver(path_to_download, version, browser, proxy):
     :param path_to_download: the path to put the file in.
     :param version: the driver version.
     :param browser: the browser to download it's specific driver.
-    :param proxy: proxy Dict. e.g {'http': '1.2.3.4', 'https': '5.6.7.8'}
+    :param proxy: proxy Dict. e.g {'http': '1.2.3.4:8080', 'https': '5.6.7.8:8080'}
     :return: the full unzipped driver's path.
     """
     if proxy:
-        Proxy().url = proxy
+        Proxy(proxy)
     driver = Downloader(browser)
 
     if version == "autodetect":

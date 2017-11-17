@@ -13,19 +13,21 @@ The next assignments must use no arguments and then, the previously assigned val
 
 Example of usage:
 >>> from proxy import Proxy
->>> proxy = Proxy('http://proxy.company.com:3128')
->>> proxy.url
+>>> proxy = Proxy({'http': 'http://proxy.company.com:3128',
+                   'https': 'http://proxy.company.com:3128'})
+>>> proxy.urls
 'http://proxy.company.com:3128'
 >>> proxy
 <proxy.Proxy object at 0x7fd6df1797b8>
 >>> proxy2 = Proxy()
 >>> proxy2
 <proxy.Proxy object at 0x7fd6df1797b8>
->>> proxy2.url
-'http://proxy.company.com:3128'
->>> Proxy().url
-'http://proxy.company.com:3128'
+>>> proxy2.urls
+{'http': 'http://proxy.company.com:3128', 'https': 'http://proxy.company.com:3128'}
+>>> Proxy().urls
+{'http': 'http://proxy.company.com:3128', 'https': 'http://proxy.company.com:3128'}
 """
+
 
 class Proxy:
     """
@@ -36,7 +38,7 @@ class Proxy:
     """
     __instance = None
 
-    def __new__(cls, url=None):
+    def __new__(cls, urls=None):
         """
         Static function responsible for creating a new instance of Proxy.
         This implementation aims to create a single instance of Proxy in the first
@@ -46,10 +48,10 @@ class Proxy:
         Once assigned, the instance will not take a new value, unless explicitly set by
         using `instance_variable.url = 'new value'`
 
-        :param url: The proxy url in the format [http|https]://[HOST]:[PORT].
+        :param urls: The proxy url in the format [http|https]://[HOST]:[PORT].
         """
         if Proxy.__instance is None:
             Proxy.__instance = object.__new__(cls)
-            Proxy.__instance.url = url
+            Proxy.__instance.urls = urls
 
         return Proxy.__instance
