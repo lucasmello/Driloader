@@ -61,7 +61,7 @@ def download_driver(path_to_download, version, browser, proxy):
     :return: the full unzipped driver's path.
     """
     if proxy:
-        Proxy.proxy = proxy
+        Proxy().url = proxy
     driver = Downloader(browser)
 
     if version == "autodetect":
