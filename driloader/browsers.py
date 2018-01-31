@@ -77,6 +77,10 @@ class Browser:
             return self.get_latest_chrome_driver()
         if self.driver == IEDRIVER:
             return self.get_latest_ie_driver()
+        else:
+            raise ValueError("Driver value must be {} or {} or {}".format(
+                GECKODRIVER, CHROMEDRIVER, IEDRIVER
+            ))
 
     def get_supported(self):
         """
@@ -89,6 +93,10 @@ class Browser:
             return self.get_supported_chrome_driver()
         if self.driver == IEDRIVER:
             return self.version_latest
+        else:
+            raise ValueError("Driver value must be {} or {} or {}".format(
+                GECKODRIVER, CHROMEDRIVER, IEDRIVER
+            ))
 
     def get_installed_version(self):
         """
@@ -102,6 +110,10 @@ class Browser:
             return browser.get_chrome_version()
         if self.driver == IEDRIVER:
             return browser.get_internet_explorer_version()
+        else:
+            raise ValueError("Driver value must be {} or {} or {}".format(
+                GECKODRIVER, CHROMEDRIVER, IEDRIVER
+            ))
 
 # IE DRIVER SECTION
     @staticmethod
@@ -158,6 +170,7 @@ class Browser:
             version_range = range(int(value.get('from')), int(value.get('to')) + 1)
             if self.version_installed in version_range:
                 return attr
+        return None
 
 # GECKO DRIVER SECTION
     @staticmethod

@@ -155,6 +155,7 @@ def parse_args():
     for key, value in args.__dict__.items():
         if value is True:
             return key
+    return None
 
 
 def display_output(message, output_type=OutputType.INFO):

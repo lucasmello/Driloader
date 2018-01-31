@@ -117,7 +117,7 @@ class BrowserDetection:
                 str_version = out_reg.group(0)
                 int_version = int(str_version.partition(".")[0])
                 return int_version
-
+            return None
         except Exception as error:
             raise BrowserDetectionError('Unable to retrieve Firefox version from system', error)
 
