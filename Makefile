@@ -1,14 +1,18 @@
 # Used when make is called with no target
 default: help
 
-# Install packages from requirements.txt
+# Install packages from Pipfile
 install:
 	pipenv install --dev
 
 # Run tests with pytest
 test:
-	pytest -s --verbose --durations=5 --cov=driloader ./tests
+	pytest -s --verbose --durations=5 ./tests
 
+
+# Run tests with pytest and coverage
+test-cov:
+	pytest -s --verbose --cov-report term-missing --cov=driloader ./tests
 
 # Run pylint
 lint:
@@ -26,7 +30,7 @@ clean:
 
 
 # Sort imports as PEP8
-isort: install
+isort:
 	isort **/*.py
 
 
