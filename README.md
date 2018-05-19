@@ -28,8 +28,6 @@ bash: $ make install
 pipenv install --dev
 Installing dependencies from Pipfile.lock…
   🐍   ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉ 20/20 — 00:00:03
-To activate this project's virtualenv, run the following:
- $ pipenv shell
 # Active virtual env
 bash: $ pipenv shell
 source ~/.local/share/virtualenvs/driloader-ZPASDPNJ/bin/activate
