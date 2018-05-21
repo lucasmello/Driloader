@@ -29,7 +29,8 @@ class TestCommands:
     def test_call_subprocess_check_output_with_a_valid_command(mocker):
         """Test calls like subprocess.check_ouput('valiad_command') """
 
-        mocker.patch('subprocess.check_output', return_value=b'cmd_output')
+        mocker.patch('subprocess.check_output', return_value=b'cmd_output', create=True)
+        mocker.patch('subprocess.run', return_value=b'cmd_output', create=True)
         output = Commands.run("a_valid_command")
         assert output == 'cmd_output'
 

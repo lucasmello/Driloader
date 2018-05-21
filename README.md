@@ -14,6 +14,28 @@ Selenium drivers downloader tool with standalone CLI support.
 ## Requires
 * Python 3.4 or higher
 
+## Setup the project
+This project uses [Pipenv](https://github.com/pypa/pipenv) as packaging tool. Please make sure you have it installed in your system.
+
+Also, we use [make](https://www.gnu.org/software/make/) as task runner, so you can see the available tasks by running `make help`.
+
+```bash
+# Clone the project
+bash: $ git clone https://github.com/lucasmello/Driloader.git
+bash: $ cd Driloader
+# Install dependencies
+bash: $ make install
+pipenv install --dev
+Installing dependencies from Pipfile.lock…
+  🐍   ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉ 20/20 — 00:00:03
+# Active virtual env
+bash: $ pipenv shell
+source ~/.local/share/virtualenvs/driloader-ZPASDPNJ/bin/activate
+# Run linter and tests
+(driloader-ZPASDPNJ) driloader: $ make lint test
+
+```
+
 ## Installing
 ```
  pip install driloader
