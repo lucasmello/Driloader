@@ -1,5 +1,7 @@
-# Used when make is called with no target
 default: help
+
+upgrade-dist-tools:
+	python -m pip install --upgrade setuptools wheel twine
 
 # Install packages from Pipfile
 install:
@@ -19,19 +21,28 @@ lint:
 	python lint.py
 
 
-# Create egg from source
-build:
-	python setup.py install
+# Create wheel from source
+build: upgrade-dist-tools
+	python setup.py sdist bdist_wheel
 
 
 # Remove build files
 clean:
-	rm -rf build/ driloader.egg-info/
-
+	rm -rf build/ driloader.egg-info/ dist/
 
 # Sort imports as PEP8
 isort:
 	isort **/*.py
+
+
+# Upload dist content to test.pypi.org
+upload-test:
+	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+
+# Upload dist content to pypi.org
+upload:
+	twine upload  dist/*
 
 
 # Display this help
@@ -39,7 +50,7 @@ help:
 	@ echo
 	@ echo '  Usage:'
 	@ echo ''
-	@ echo '	make <target> [flags...]'
+	@ echo '	make <target>'
 	@ echo ''
 	@ echo '  Targets:'
 	@ echo ''
