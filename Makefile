@@ -50,7 +50,7 @@ help:
 	@ echo
 	@ echo '  Usage:'
 	@ echo ''
-	@ echo '	make <target>'
+	@ echo '	make <target> [flags...]'
 	@ echo ''
 	@ echo '  Targets:'
 	@ echo ''
