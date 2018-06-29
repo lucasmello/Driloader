@@ -153,7 +153,7 @@ class Browser:
         resp = requests.get('https://chromedriver.storage.googleapis.com/'
                             'LATEST_RELEASE', proxies=Proxy().urls)
         reg = re.search(PATTERN_SEARCH, resp.text)
-        return float(reg.group(0))
+        return reg.group(0)
 
     def get_supported_chrome_driver(self):
         """
