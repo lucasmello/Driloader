@@ -1,17 +1,15 @@
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
 setup(
     name='driloader',
     version='1.2.1',
     packages=find_packages(exclude=['tests', '*.tests', '*.tests.*']),
     include_package_data=True,
+    package_data={'': ['drivers_info.ini']},
     description='Driver downloader for Selenium',
     author='Lucas Trajano; Felipe Viegas; Jonatha Daguerre',
     license='MIT',
-    long_description=long_description,
+    long_description='Driver downloader for Selenium',
     long_description_content_type="text/markdown",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
