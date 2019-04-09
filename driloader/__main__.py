@@ -91,7 +91,7 @@ class DriloaderCommands():
             raise CliError('Unable to get the Internet Explorer version', str(err))
 
     def get_all_browsers_versions(self):
-        """ Returns all browsers version.
+        """ Returns all browser version.
         Args:
             self
         Returns:
@@ -147,7 +147,7 @@ def parse_args():
                         action='store_true')
 
     action.add_argument('--all',
-                        help='look for browsers an get their versions.',
+                        help='look for browser an get their versions.',
                         action='store_true')
 
     args = parser.parse_args()

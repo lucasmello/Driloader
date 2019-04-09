@@ -26,7 +26,7 @@ import pytest
 import pytest_mock
 from requests import Response
 
-from driloader.browsers import IEDRIVER
+from driloader.browser import IEDRIVER
 from driloader.downloader import Downloader
 
 
@@ -40,7 +40,7 @@ class TestDownloader:
         depends on in order to avoid mocke them in every new test.
         """
         mocker.patch('platform.system', return_value='Windows')
-        mocker.patch('driloader.browsers.Browser.__init__', return_value=None)
+        mocker.patch('driloader.browser.Browser.__init__', return_value=None)
         mocker.patch('driloader.downloader.Downloader._create_driver_folder',
                      return_value='hidden_name')
 
@@ -108,7 +108,7 @@ class TestDownloader:
             The assertion consists in checking if the content saved by the tested
             function is a text file with the same random number.
 
-            Using IEDRIVER and mocking the needed functions from driloader.browsers
+            Using IEDRIVER and mocking the needed functions from driloader.browser
             to ensure the mocking would take care of all real system information.
 
             This test takes usually longer than a few ms, probably because of IO operations

@@ -54,7 +54,6 @@ class Commands:
 
             if (hasattr(cmd_result, "returncode") and cmd_result.returncode == 0) \
                     or cmd_result is not None:
-                result = None
                 stdout = cmd_result.stdout if hasattr(cmd_result, "stdout") else cmd_result
                 if isinstance(stdout, bytes):
                     result = stdout.decode('utf-8')
@@ -67,3 +66,7 @@ class Commands:
 
         except FileNotFoundError:
             raise CommandError('Command "{}" not found!'.format(''.join(command)))
+
+    @staticmethod
+    def get_command_output(command):
+        return subprocess.getoutput(command)
