@@ -17,7 +17,7 @@ requests = "*"
 [dev-packages]
 pytest = "*"
 pytest-mock = "*"
-# pytest-cov = "*"
+pytest-cov = "*"
 pylint = "*"
 isort = "*"
 
