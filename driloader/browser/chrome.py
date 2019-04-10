@@ -1,3 +1,9 @@
+"""
+
+Module that abstract operations to handle Chrome versions.
+
+"""
+
 import os
 import re
 import requests
@@ -9,6 +15,10 @@ from ..commands import Commands
 
 
 class Chrome(BaseBrowser):
+
+    """
+    Implements all BaseBrowser methods to find the proper Chrome version.
+    """
 
     __instance = None
     __chrome_version_regex = r'----------ChromeDriver v((?:\d+\.?)+)'\
@@ -22,7 +32,7 @@ class Chrome(BaseBrowser):
         self.version_installed = self.installed_browser_version()
         self.version_dict = self._mount_chrome_dict()
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls):
         if Chrome.__instance is None:
             Chrome.__instance = object.__new__(cls)
         return Chrome.__instance

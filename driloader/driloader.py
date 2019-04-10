@@ -80,13 +80,13 @@ def download_driver(path_to_download, version, browser_name, proxy):
     download_url = download_url.replace("{version_short}", str(driver_version).rpartition('.')[0])
     download_url = download_url.replace("{version}", str(driver_version))
 
-    p = os.path.join(driver.drivers_path, browser_name, driver_version)
+    path = os.path.join(driver.drivers_path, browser_name, driver_version)
 
     if path_to_download == "default":
 
         if not os.path.exists(driver.drivers_path):
             os.makedirs(driver.drivers_path)
-        full_path = os.path.join(p, browser.zipped_file)
+        full_path = os.path.join(path, browser.zipped_file)
     else:
         full_path = os.path.join(path_to_download, browser.zipped_file)
         unzipped_path = os.path.join(path_to_download, browser.unzipped_file)
@@ -97,7 +97,7 @@ def download_driver(path_to_download, version, browser_name, proxy):
         return unzipped_path
 
     driver.download_file(download_url, full_path)
-    FileHandler.unzip(full_path, p, True)
+    FileHandler.unzip(full_path, path, True)
     if sys.platform == 'linux' and browser_name == 'CHROME':
         make_executable = 'chmod +x {}'.format(unzipped_path)
         Commands.run(make_executable)

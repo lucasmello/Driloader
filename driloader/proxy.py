@@ -38,6 +38,9 @@ class Proxy:
     """
     __instance = None
 
+    def __init__(self):
+        self.urls = None
+
     def __new__(cls, urls=None):
         """
         Static function responsible for creating a new instance of Proxy.

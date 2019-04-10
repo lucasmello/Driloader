@@ -12,10 +12,11 @@
 import argparse
 import sys
 
-from .browser_detection import BrowserDetection, BrowserDetectionError
+from driloader.browser.exceptions import BrowserDetectionError
+from driloader.factories.browser_factory import BrowserFactory
 
 
-class OutputType():
+class OutputType:
     """Output Type
     Enum Class to store the possible output types.
     Types:
@@ -37,18 +38,15 @@ class CliError(Exception):
         super(CliError, self).__init__(message)
         self.cause = cause
 
-    def __str__(self):
-        return 'Error: {}.\nCause: {}'.format(self.args[0], self.cause)
+    # def __str__(self):
+    #     return 'Error: {}.\nCause: {}'.format(self.args[0], self.cause)
 
 
-class DriloaderCommands():
+class DriloaderCommands:
     """A facade to BrowserDetection"""
 
-    def __init__(self):
-        """Init method"""
-        self.detection = BrowserDetection()
-
-    def get_google_chrome_version(self):
+    @staticmethod
+    def get_google_chrome_version():
         """ Returns Google Chrome version.
         Args:
             self
@@ -58,11 +56,12 @@ class DriloaderCommands():
             CliError: Case something goes wrong when getting the browser version.
         """
         try:
-            return self.detection.get_chrome_version()
+            return BrowserFactory('CHROME').browser.installed_browser_version()
         except BrowserDetectionError as err:
             raise CliError('Unable to get the Google Chrome version', str(err))
 
-    def get_firefox_version(self):
+    @staticmethod
+    def get_firefox_version():
         """ Returns Firefox version.
         Args:
             self
@@ -72,11 +71,12 @@ class DriloaderCommands():
             CliError: Case something goes wrong when getting the browser version.
         """
         try:
-            return self.detection.get_firefox_version()
+            return BrowserFactory('FIREFOX').browser.installed_browser_version()
         except BrowserDetectionError as err:
             raise CliError('Unable to get the Firefox version', str(err))
 
-    def get_internet_explorer_version(self):
+    @staticmethod
+    def get_internet_explorer_version():
         """ Returns Internet Explorer version.
         Args:
             self
@@ -86,7 +86,7 @@ class DriloaderCommands():
             CliError: Case something goes wrong when getting the browser version.
         """
         try:
-            return self.detection.get_internet_explorer_version()
+            return BrowserFactory('IE').browser.installed_browser_version()
         except BrowserDetectionError as err:
             raise CliError('Unable to get the Internet Explorer version', str(err))
 

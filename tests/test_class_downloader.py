@@ -26,7 +26,6 @@ import pytest
 import pytest_mock
 from requests import Response
 
-from driloader.browser import IEDRIVER
 from driloader.downloader import Downloader
 from driloader.utils.file import FileHandler
 
@@ -41,7 +40,7 @@ class TestDownloader:
         depends on in order to avoid mocke them in every new test.
         """
         mocker.patch('platform.system', return_value='Windows')
-        mocker.patch('driloader.browser.Browser.__init__', return_value=None)
+        # mocker.patch('driloader.browser.Browser.__init__', return_value=None)
         mocker.patch('driloader.downloader.Downloader._create_driver_folder',
                      return_value='hidden_name')
 
@@ -122,7 +121,7 @@ class TestDownloader:
         mocker.patch.object(Response, 'content')
         Response.content = bytes(mocked_response, 'UTF-8')
 
-        downloader = Downloader(IEDRIVER)
+        downloader = Downloader('IE')
         downloader.download_file('http://test.driver.io', mock_file_name)
 
         with open(mock_file_name, 'r') as file:

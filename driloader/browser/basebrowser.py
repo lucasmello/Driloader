@@ -1,9 +1,17 @@
+"""
+Module that abstract all common operations to find right browser versions.
+"""
+
 import os
 import configparser
 from abc import ABC, abstractmethod
 
 
 class BaseBrowser(ABC):
+
+    """
+    Provides all common methods to detect best matches.
+    """
 
     def __init__(self, browser_name):
         self.parser = configparser.ConfigParser()
@@ -15,25 +23,40 @@ class BaseBrowser(ABC):
         self.unzipped_file = self._get_unzipped_file_name()
 
     def _get_zipped_file_name(self):
+        """
+        Reads the zipped file's name from browsers.ini.
+        :return: zipped file name.
+        """
         if os.name == 'nt':
             return self.section['zip_file_win']
-        else:
-            return self.section['zip_file_linux']
+        return self.section['zip_file_linux']
 
     def _get_unzipped_file_name(self):
+        """
+        Reads the unzipped file's name from browsers.ini.
+        :return: unzipped file name.
+        """
         if os.name == 'nt':
             return self.section['unzipped_win']
-        else:
-            return self.section['unzipped_linux']
+        return self.section['unzipped_linux']
 
     @abstractmethod
     def latest_driver(self):
+        """"
+        Returns the latest available driver.
+        """
         raise NotImplementedError
 
     @abstractmethod
     def driver_matching_installed_version(self):
+        """
+        Best matching between browser version and driver.
+        """
         raise NotImplementedError
 
     @abstractmethod
     def installed_browser_version(self):
+        """
+        Detects the browser version.
+        """
         raise NotImplementedError

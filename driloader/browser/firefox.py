@@ -1,3 +1,9 @@
+"""
+
+Module that abstract operations to handle Chrome versions.
+
+"""
+
 import os
 import re
 import requests
@@ -9,6 +15,9 @@ from .basebrowser import BaseBrowser
 
 
 class Firefox(BaseBrowser):
+    """
+    Implements all BaseBrowser methods to find the proper Firefox version.
+    """
 
     def __init__(self):
         super().__init__('FIREFOX')

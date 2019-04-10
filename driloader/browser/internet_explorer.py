@@ -1,9 +1,17 @@
+# pylint: disable=anomalous-backslash-in-string, too-many-locals
+
+"""
+
+Module that abstract operations to handle Internet Explorer versions.
+
+"""
+
 import os
 import re
-import requests
 import platform
-
 import xml.etree.ElementTree as ET
+import requests
+
 
 from driloader.browser.exceptions import BrowserDetectionError
 from driloader.commands import Commands
@@ -12,13 +20,16 @@ from .basebrowser import BaseBrowser
 
 
 class IE(BaseBrowser):
+    """
+    Implements all BaseBrowser methods to find the proper Internet Explorer version.
+    """
 
     _find_version_32_regex = r'IEDriverServer_Win32_([\d]+\.[\d]+\.[\d])'
     _find_version_64_regex = r'IEDriverServer_x64_([\d]+\.[\d]+\.[\d])'
 
     def __init__(self):
         super().__init__('IE')
-        self.x64 = self._is_windows_x64()
+        self.x64 = IE._is_windows_x64()
 
     def latest_driver(self):
         """
@@ -44,7 +55,10 @@ class IE(BaseBrowser):
                 if version_nbr is not None:
                     version_str = version_nbr.group(1)
                 try:
-                    version = float(version_str.rpartition('.')[0]) if version_str is not None else 0
+                    if version_str is not None:
+                        version = float(version_str.rpartition('.')[0])
+                    else:
+                        version = 0
                 except ValueError:
                     version = 0
                 if version >= last_version:
@@ -81,5 +95,6 @@ class IE(BaseBrowser):
 
         return int_version
 
-    def _is_windows_x64(self):
+    @staticmethod
+    def _is_windows_x64():
         return platform.machine().endswith('64')

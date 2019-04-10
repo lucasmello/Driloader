@@ -18,7 +18,7 @@ test-cov:
 
 # Run pylint
 lint:
-	python lint.py
+	pylint -d fixme driloader
 
 
 # Create wheel from source

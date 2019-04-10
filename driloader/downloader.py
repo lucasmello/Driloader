@@ -34,7 +34,8 @@ class Downloader:
         self.drivers_path = self._create_driver_folder()
         self.browser_factory = BrowserFactory(browser_name)
 
-    def _create_driver_folder(self):
+    @staticmethod
+    def _create_driver_folder():
         """
         Creates a folder to put the drivers and hides it.
         :return: the folder path.

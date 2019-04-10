@@ -1,3 +1,12 @@
+"""
+driloader.utils.file
+--------------------
+
+Module to abstract file related operations.
+
+"""
+
+
 import os
 import zipfile
 
@@ -6,8 +15,18 @@ from driloader.commands import Commands
 
 class FileHandler:
 
+    """
+    Handles file operations.
+    """
+
     @staticmethod
     def create_folders(folder_path, hidden=False):
+        """
+        Creates folders recursively.
+        :param folder_path: the folder path.
+        :param hidden: if the last created folder should be hidden.
+        :return: the full folder path.
+        """
         if hidden:
             if os.name == 'nt':
                 import ctypes
