@@ -24,17 +24,16 @@ import requests
 from .browser_detection import BrowserDetection
 from .proxy import Proxy
 
-GECKODRIVER = 'GECKODRIVER'
-CHROMEDRIVER = 'CHROMEDRIVER'
-IEDRIVER = 'IEDRIVER'
+GECKODRIVER = 'FIREFOX'
+CHROMEDRIVER = 'CHROME'
+IEDRIVER = 'IE'
 PATTERN_SEARCH = r'\d{1,2}[\,\.]{1}\d{1,2}'
 
 
 class Browser:
     """Abstracts the browser information based on OS and driver."""
-    def __init__(self, driver, os_name):
+    def __init__(self, driver):
         self.driver = driver
-        self.base_url = get_config(self.driver, 'base_url')
         self.version_installed = self.get_installed_version()
         self.version_matcher_path = self.get_chrome_version_matcher_path()
         self.version_latest = self.get_latest()

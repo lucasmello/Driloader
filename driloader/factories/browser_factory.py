@@ -9,6 +9,7 @@ class BrowserFactory(BaseBrowser):
 
     def __init__(self, browser_name):
         self.browser_name = browser_name
+        super().__init__(browser_name)
 
     def get_latest_driver(self):
         if self.browser_name.upper() == 'CHROME':

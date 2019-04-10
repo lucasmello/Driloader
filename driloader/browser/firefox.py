@@ -12,7 +12,7 @@ class Firefox(BaseBrowser):
 
     def __init__(self):
         super().__init__('FIREFOX')
-        self.latest_version_url = self.section.get('GECKO_LATEST_VERSION_URL')
+        self.latest_version_url = self.section.get('latest_release_url')
 
     def get_latest_driver(self):
         """
@@ -45,7 +45,7 @@ class Firefox(BaseBrowser):
                 output = Commands.get_command_output('firefox -v')
 
             if output is not None:
-                out_reg = re.search(self.pattern_search_regex, str(output))
+                out_reg = re.search(self.search_pattern_regex, str(output))
                 str_version = out_reg.group(0)
                 int_version = int(str_version.partition(".")[0])
                 return int_version

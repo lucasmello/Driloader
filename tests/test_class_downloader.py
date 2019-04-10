@@ -28,6 +28,7 @@ from requests import Response
 
 from driloader.browser import IEDRIVER
 from driloader.downloader import Downloader
+from driloader.utils.file import FileHandler
 
 
 class TestDownloader:
@@ -93,7 +94,7 @@ class TestDownloader:
         zip_file.close()
 
         os.remove(existing_file_name)
-        Downloader.unzip(zip_file_name, './', True)
+        FileHandler.unzip(zip_file_name, './', True)
 
         unzipped_file_exists = os.path.exists(existing_file_name)
         os.remove(existing_file_name)

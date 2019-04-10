@@ -28,7 +28,7 @@ class IE(BaseBrowser):
         last_version = 0
         for content in contents:
             version_str = content.find(tag + 'Key').text[:4]
-            version_nbr = re.search(self.pattern_search_regex, version_str)
+            version_nbr = re.search(self.search_pattern_regex, version_str)
             if version_nbr is not None:
                 version_str = version_nbr.group(0)
             try:
@@ -37,7 +37,8 @@ class IE(BaseBrowser):
                 version = 0
             if version > last_version:
                 last_version = version
-        return last_version
+        # TODO: return the string version, because it can be 3.9.0, for instance.
+        return str(last_version)
 
     def get_driver_matching_installed_version(self):
         # TODO: Version matcher for IE.
@@ -60,7 +61,7 @@ class IE(BaseBrowser):
 
         try:
             output = Commands.run(cmd)
-            reg = re.search(self.pattern_search_regex, str(output))
+            reg = re.search(self.search_pattern_regex, str(output))
             str_version = reg.group(0)
             int_version = int(str_version.partition(".")[0])
         except Exception as error:

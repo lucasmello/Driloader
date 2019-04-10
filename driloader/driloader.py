@@ -12,7 +12,7 @@ Module which abstracts the main Driloader functions.
 import os
 import sys
 
-from .browsers import CHROMEDRIVER, GECKODRIVER, IEDRIVER
+from driloader.utils.file import FileHandler
 from .commands import Commands
 from .downloader import Downloader
 from .proxy import Proxy
@@ -26,7 +26,7 @@ def download_chrome_driver(path_to_download="default", version="autodetect", pro
     :param proxy: proxy Dict. e.g {'http': '1.2.3.4', 'https': '5.6.7.8'}
     :return: the full path to the unzipped chrome driver.
     """
-    return download_driver(path_to_download, version, CHROMEDRIVER, proxy)
+    return download_driver(path_to_download, version, 'CHROME', proxy)
 
 
 def download_gecko_driver(path_to_download="default", version="autodetect", proxy=None):
@@ -37,7 +37,7 @@ def download_gecko_driver(path_to_download="default", version="autodetect", prox
     :param proxy: proxy Dict. e.g {'http': '1.2.3.4', 'https': '5.6.7.8'}
     :return: the full path to the unzipped gecko driver.
     """
-    return download_driver(path_to_download, version, GECKODRIVER, proxy)
+    return download_driver(path_to_download, version, 'FIREFOX', proxy)
 
 
 def download_ie_driver(path_to_download="default", version="autodetect", proxy=None):
@@ -48,7 +48,7 @@ def download_ie_driver(path_to_download="default", version="autodetect", proxy=N
     :param proxy: proxy Dict. e.g {'http': '1.2.3.4', 'https': '5.6.7.8'}
     :return: the full path to the unzipped ie driver.
     """
-    return download_driver(path_to_download, version, IEDRIVER, proxy)
+    return download_driver(path_to_download, version, 'IE', proxy)
 
 
 def download_driver(path_to_download, version, browser, proxy):
@@ -65,39 +65,37 @@ def download_driver(path_to_download, version, browser, proxy):
     driver = Downloader(browser)
 
     if version == "autodetect":
-        driver_version = driver.browser.version_supported
+        driver_version = driver.browser_factory.get_driver_matching_installed_version()
     elif version == "latest":
-        driver_version = driver.browser.version_latest
+        driver_version = driver.browser_factory.get_latest_driver()
     else:
         driver_version = version
 
-    unzipped_path = "{0}{1}{2}{3}{2}{4}".format(driver.get_default_path(), driver.browser.driver,
-                                                os.sep, driver_version, driver.browser.file_name)
+    unzipped_path = os.path.join(driver.get_default_path(), browser,
+                                 driver_version, driver.browser_factory.unzipped_file)
 
-    file_name_zipped = driver.browser.file_name_zip
-    file_name_zipped = file_name_zipped.replace('{version}', str(driver_version))
-
-    download_url = "{}{}".format(driver.browser.base_url, file_name_zipped)
+    download_url = "{}{}".format(driver.browser_factory.base_url, driver.browser_factory.zipped_file)
     download_url = download_url.replace("{version}", str(driver_version))
+
+    p = os.path.join(driver.drivers_path, browser, driver_version)
 
     if path_to_download == "default":
 
-        driver.drivers_path += "{}{}{}".\
-            format(str(driver.browser.driver), os.sep, str(driver_version))
-
         if not os.path.exists(driver.drivers_path):
             os.makedirs(driver.drivers_path)
-        full_path = driver.drivers_path + os.sep + file_name_zipped
+        full_path = os.path.join(p, driver.browser_factory.zipped_file)
     else:
-        full_path = path_to_download + os.sep + file_name_zipped
-        unzipped_path = "{}{}{}".format(path_to_download, os.sep, driver.browser.file_name)
+        full_path = os.path.join(path_to_download, driver.browser_factory.zipped_file)
+        unzipped_path = os.path.join(path_to_download, driver.browser_factory.unzipped_file)
+
+    full_path = full_path.replace('{version}', driver.browser_factory.get_driver_matching_installed_version())
 
     if driver.check_driver_exists(unzipped_path):
         return unzipped_path
 
     driver.download_file(download_url, full_path)
-    driver.unzip(full_path, driver.drivers_path, True)
-    if sys.platform == "linux" and browser == CHROMEDRIVER:
-        make_executable = "chmod +x {}{}{}".format(driver.drivers_path, os.sep, "chromedriver")
+    FileHandler.unzip(full_path, p, True)
+    if sys.platform == 'linux' and browser == 'CHROME':
+        make_executable = 'chmod +x {}'.format(unzipped_path)
         Commands.run(make_executable)
     return unzipped_path

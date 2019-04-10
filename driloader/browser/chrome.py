@@ -17,8 +17,8 @@ class Chrome(BaseBrowser):
 
     def __init__(self):
         super().__init__('CHROME')
-        self._versions_url = self.parser.get('CHROME', 'VERSIONS_URL')
-        self._latest_release_url = self.parser.get('CHROME', 'LATEST_RELEASE_URL')
+        self._versions_url = self.section['versions_url']
+        self._latest_release_url = self.section['latest_release_url']
         self.version_installed = self.get_installed_version()
         self.version_dict = self._mount_chrome_dict()
 
@@ -51,7 +51,7 @@ class Chrome(BaseBrowser):
         :return: the latest chrome driver version.
         """
         resp = requests.get(self._latest_release_url, proxies=Proxy().urls)
-        reg = re.search(re.compile(self.pattern_search_regex), resp.text)
+        reg = re.search(re.compile(self.search_pattern_regex), resp.text)
         return str(reg.group(0))
 
     def get_driver_matching_installed_version(self):
@@ -83,7 +83,7 @@ class Chrome(BaseBrowser):
                        'name="{}"'.format(app), 'get', 'Version', '/value']
 
                 result = Commands.run(cmd)
-                res_reg = re.search(self._pattern_search, str(result))
+                res_reg = re.search(self.search_pattern_regex, str(result))
                 str_version = res_reg.group(0)
 
             else:
