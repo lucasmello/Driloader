@@ -14,7 +14,7 @@ class Firefox(BaseBrowser):
         super().__init__('FIREFOX')
         self.latest_version_url = self.section.get('latest_release_url')
 
-    def get_latest_driver(self):
+    def latest_driver(self):
         """
        Gets the latest gecko driver version.
        :return: the latest gecko driver version.
@@ -23,11 +23,11 @@ class Firefox(BaseBrowser):
         reg = re.search(r'\d{1,2}[\d.]+', resp.url.rpartition('/')[2])
         return reg.group(0)
 
-    def get_driver_matching_installed_version(self):
+    def driver_matching_installed_version(self):
         # TODO: get the right Firefox version
-        return self.get_latest_driver()
+        return self.latest_driver()
 
-    def get_installed_version(self):
+    def installed_browser_version(self):
         """ Returns Firefox version.
         Args:
             self

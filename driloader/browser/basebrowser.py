@@ -27,13 +27,13 @@ class BaseBrowser(ABC):
             return self.section['unzipped_linux']
 
     @abstractmethod
-    def get_latest_driver(self):
+    def latest_driver(self):
         raise NotImplementedError
 
     @abstractmethod
-    def get_driver_matching_installed_version(self):
+    def driver_matching_installed_version(self):
         raise NotImplementedError
 
     @abstractmethod
-    def get_installed_version(self):
+    def installed_browser_version(self):
         raise NotImplementedError

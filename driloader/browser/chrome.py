@@ -19,7 +19,7 @@ class Chrome(BaseBrowser):
         super().__init__('CHROME')
         self._versions_url = self.section['versions_url']
         self._latest_release_url = self.section['latest_release_url']
-        self.version_installed = self.get_installed_version()
+        self.version_installed = self.installed_browser_version()
         self.version_dict = self._mount_chrome_dict()
 
     def __new__(cls, *args, **kwargs):
@@ -32,7 +32,7 @@ class Chrome(BaseBrowser):
         Creates the file that matches the version with installed chrome.
         """
 
-        versions_url = self._versions_url.replace('{version}', str(self.get_latest_driver()))
+        versions_url = self._versions_url.replace('{version}', str(self.latest_driver()))
 
         chrome_json = {}
 
@@ -45,7 +45,7 @@ class Chrome(BaseBrowser):
             chrome_json[obj[0]] = {'from': _from, 'to': _to}
         return chrome_json
 
-    def get_latest_driver(self):
+    def latest_driver(self):
         """
         Gets the latest chrome driver version.
         :return: the latest chrome driver version.
@@ -54,7 +54,7 @@ class Chrome(BaseBrowser):
         reg = re.search(re.compile(self.search_pattern_regex), resp.text)
         return str(reg.group(0))
 
-    def get_driver_matching_installed_version(self):
+    def driver_matching_installed_version(self):
         """
         Gets the right version to the installed version.
         :return: the right version to work with installed browser.        """
@@ -65,7 +65,7 @@ class Chrome(BaseBrowser):
                 return attr
         return None
 
-    def get_installed_version(self):
+    def installed_browser_version(self):
         """ Returns Google Chrome version.
         Args:
         Returns:
