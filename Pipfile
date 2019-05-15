@@ -10,8 +10,8 @@ name = "pypi"
 certifi = "*"
 chardet = "*"
 idna = "*"
-requests = "*"
-"urllib3" = "*"
+requests = ">=2.20.0"
+urllib3 = ">=1.23"
 
 
 [dev-packages]

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods, unnecessary-pass
 
 """
 driloader.commands
@@ -54,7 +54,6 @@ class Commands:
 
             if (hasattr(cmd_result, "returncode") and cmd_result.returncode == 0) \
                     or cmd_result is not None:
-                result = None
                 stdout = cmd_result.stdout if hasattr(cmd_result, "stdout") else cmd_result
                 if isinstance(stdout, bytes):
                     result = stdout.decode('utf-8')
@@ -62,8 +61,16 @@ class Commands:
                     result = stdout
 
                 return result
-            else:
-                raise CommandError('Command "{}" failed!'.format(''.join(command)))
+            raise CommandError('Command "{}" failed!'.format(''.join(command)))
 
         except FileNotFoundError:
             raise CommandError('Command "{}" not found!'.format(''.join(command)))
+
+    @staticmethod
+    def get_command_output(command):
+        """
+        Executes a command and returns its stdout.
+        :param command: command to be executed.
+        :return: command's stdout.
+        """
+        return subprocess.getoutput(command)
