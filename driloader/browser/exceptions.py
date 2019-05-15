@@ -13,9 +13,6 @@ class BrowserDetectionError(Exception):
         super(BrowserDetectionError, self).__init__(message)
         self.cause = cause
 
-    # def __str__(self):
-    #     return 'Error: {}.\nCause: {}'.format(self.args[0], self.cause)
-
 
 class BrowserNotSupportedError(Exception):
     """ BrowserDetectionError """
@@ -26,6 +23,3 @@ class BrowserNotSupportedError(Exception):
         """
         super(BrowserNotSupportedError, self).__init__(message)
         self.cause = cause
-
-    # def __str__(self):
-    #     return 'Error: {}.\nCause: {}'.format(self.args[0], self.cause)

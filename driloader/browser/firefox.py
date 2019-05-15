@@ -8,6 +8,13 @@ import os
 import re
 import requests
 
+try:
+    from _winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE, HKEY_CURRENT_USER
+except ImportError:
+    from winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE, HKEY_CURRENT_USER
+
+import shlex
+
 from driloader.browser.exceptions import BrowserDetectionError
 from driloader.commands import Commands
 from driloader.proxy import Proxy
@@ -62,8 +69,7 @@ class Firefox(BaseBrowser):
         except Exception as error:
             raise BrowserDetectionError('Unable to retrieve Firefox version from system', error)
 
-    @staticmethod
-    def _find_firefox_exe_in_registry():
+    def _find_firefox_exe_in_registry(self):
         """ Finds firefox.exe file in Windows systems.
         Args:
         Returns:
@@ -72,25 +78,16 @@ class Firefox(BaseBrowser):
             None
         """
 
-        try:
-            from _winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE, HKEY_CURRENT_USER
-        except ImportError:
-            from winreg import OpenKey, QueryValue, HKEY_LOCAL_MACHINE, HKEY_CURRENT_USER
-
-        import shlex
-
         keys = (r"SOFTWARE\Classes\FirefoxHTML\shell\open\command",
                 r"SOFTWARE\Classes\Applications\firefox.exe\shell\open\command")
 
         for path in keys:
             try:
-                key = OpenKey(HKEY_LOCAL_MACHINE, path)
-                command = QueryValue(key, "")
+                command = self._query_value(HKEY_LOCAL_MACHINE, path)
                 break
             except OSError:
                 try:
-                    key = OpenKey(HKEY_CURRENT_USER, path)
-                    command = QueryValue(key, "")
+                    command = self._query_value(HKEY_CURRENT_USER, path)
                     break
                 except OSError:
                     pass
@@ -101,3 +98,7 @@ class Firefox(BaseBrowser):
             return ""
 
         return shlex.split(command)[0]
+
+    def _query_value(self, key, path):
+        key = OpenKey(key, path)
+        return QueryValue(key, "")
