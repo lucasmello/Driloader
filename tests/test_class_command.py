@@ -17,9 +17,8 @@ The test set for functions in driloader.commands.Commands
 
 
 import pytest
-import pytest_mock
 
-from driloader.commands import CommandError, Commands
+from driloader.utils.commands import CommandError, Commands
 
 
 class TestCommands:

@@ -40,8 +40,9 @@ usage:
     >>> browser.quit()
 
  - Usage with Internet Explorer
-    >>> from driloader import driloader
     >>> from selenium.webdriver import Ie
+
+from driloader import driloader
     >>>
     >>> driver_path = driloader.download_ie_driver()
     >>> browser = Ie(executable_path=driver_path)
@@ -50,4 +51,4 @@ usage:
 """
 
 
-from .driloader import download_chrome_driver, download_gecko_driver, download_ie_driver
+from .driloader import chrome

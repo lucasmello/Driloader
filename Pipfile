@@ -1,18 +1,17 @@
 [[source]]
-
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 certifi = "*"
 chardet = "*"
 idna = "*"
 requests = ">=2.20.0"
 urllib3 = ">=1.23"
-
+requests-html = "*"
+pyppeteer = "*"
+responses = "*"
 
 [dev-packages]
 pytest = "*"
@@ -20,4 +19,3 @@ pytest-mock = "*"
 pytest-cov = "*"
 pylint = "*"
 isort = "*"
-

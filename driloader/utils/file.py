@@ -10,7 +10,7 @@ Module to abstract file related operations.
 import os
 import zipfile
 
-from driloader.commands import Commands
+from driloader.utils.commands import Commands
 
 
 class FileHandler:
@@ -51,7 +51,15 @@ class FileHandler:
             zfile = zipfile.ZipFile(zip_file, "r")
             zfile.extractall(path_to_extract)
             zfile.close()
-        if zip_file.endswith("gz"):
+        elif zip_file.endswith("gz"):
             Commands.run("tar -zxvf {} -C {}".format(zip_file, zip_file.rpartition("/")[0]))
         if delete_after_extract:
             os.remove(zip_file)
+
+    @staticmethod
+    def write_content(path, content):
+        """
+        Writes the response's content to disk.
+        """
+        with open(path, "wb") as file:
+            file.write(content)
