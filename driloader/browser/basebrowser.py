@@ -57,12 +57,12 @@ class BaseBrowser(ABC):
         unzipped_file_path = paths.unzipped_file_path()
         if replace_version:
             zipped_file_path = paths.zipped_file_path(
-                replace_version=driver.driver_version)
+                replace_version=driver.version)
             download_url = paths.download_url(
-                replace_version=driver.driver_version)
+                replace_version=driver.version)
         else:
             zipped_file_path = paths.zipped_file_path(
-                replace_version=driver.driver_version)
+                replace_version=driver.version)
             download_url = paths.download_url()
         if not driver.exists(unzipped_file_path):
             response = http.get(download_url, verify=False,

@@ -26,7 +26,7 @@ class Firefox(BaseBrowser):
     def __init__(self, driver: Driver):
         super().__init__('FIREFOX')
         self.driver = driver
-        self.driver.driver_version = self._latest_driver()
+        self.driver.version = self._latest_driver()
 
     def _latest_driver(self):
         """

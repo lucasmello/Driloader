@@ -177,6 +177,6 @@ class Chrome(BaseBrowser):
         """
         API to expose to client to download the driver and unzip it.
         """
-        self._driver.driver_version = self._driver_matching_installed_version()
+        self._driver.version = self._driver_matching_installed_version()
         return self._download_and_unzip(HttpOperations(),
                                         self._driver, FileHandler())

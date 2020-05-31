@@ -18,14 +18,14 @@ class Driver:
         self.browser = browser
 
     @property
-    def driver_version(self):
+    def version(self):
         """
         Returns the driver version.
         """
         return self._driver_version
 
-    @driver_version.setter
-    def driver_version(self, value):
+    @version.setter
+    def version(self, value):
         """
         Set the driver version.
         """

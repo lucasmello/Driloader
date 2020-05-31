@@ -13,7 +13,7 @@ class Paths:
 
     def __init__(self, root_path: str, base_browser, driver: Driver):
         self.path = os.path.join(root_path, driver.browser,
-                                 driver.driver_version)
+                                 driver.version)
         if not os.path.exists(self.path):
             os.makedirs(self.path)
         self.base_browser = base_browser
@@ -45,6 +45,6 @@ class Paths:
         due to dynamic versions with geckodriver.
         """
         return '{}{}'.format(self.base_browser.config.base_url().
-                             replace('{version}', self.driver.driver_version),
+                             replace('{version}', self.driver.version),
                              self.base_browser.config.zipped_file_name(
                                  replace_version=replace_version))

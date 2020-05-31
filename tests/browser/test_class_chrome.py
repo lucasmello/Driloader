@@ -45,14 +45,14 @@ class TestChrome:
     def test_get_driver(mocker):
         driver = Driver()
         driver.browser = 'chrome'
-        driver.driver_version = '123mock'
+        driver.version = '123mock'
         driver.drivers_path = '../'
         mocker.patch.object(HTML, 'find')
 
         mocker.patch('driloader.browser.chrome.Chrome._get_latest_driver_version_from_chrome_version',
                      return_value='123mock')
         mocker.patch('driloader.config.paths.Paths.zipped_file_path',
-                     return_value='./chrome/{}/chromedriver.zip'.format(driver.driver_version))
+                     return_value='./chrome/{}/chromedriver.zip'.format(driver.version))
         mocker.patch('driloader.utils.file.FileHandler.write_content',
                      side_effect=TestChrome._zip_file_mock(driver))
         mocker.patch('driloader.http.operations.HttpOperations.get',
@@ -63,7 +63,7 @@ class TestChrome:
     @staticmethod
     def _zip_file_mock(driver):
         shutil.rmtree('./chrome/', ignore_errors=True)
-        os.makedirs('./chrome/{}'.format(driver.driver_version))
-        zip_mock = zipfile.ZipFile('./chrome/{}/chromedriver.zip'.format(driver.driver_version), 'w')
-        zip_mock.write('./chrome/{}/chromedriver.zip'.format(driver.driver_version))
+        os.makedirs('./chrome/{}'.format(driver.version))
+        zip_mock = zipfile.ZipFile('./chrome/{}/chromedriver.zip'.format(driver.version), 'w')
+        zip_mock.write('./chrome/{}/chromedriver.zip'.format(driver.version))
         zip_mock.close()
