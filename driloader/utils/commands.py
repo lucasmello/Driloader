@@ -48,7 +48,9 @@ class Commands:
 
         try:
             try:
-                cmd_result = subprocess.run(command_array, stdout=subprocess.PIPE)
+                cmd_result = subprocess.run(command_array,
+                                            stdout=subprocess.PIPE,
+                                            check=True)
             except AttributeError:
                 cmd_result = subprocess.check_output(command_array)
 

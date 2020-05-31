@@ -1,3 +1,4 @@
+# pylint: disable=import-outside-toplevel
 """
 
 Module that abstract operations to handle Chrome versions.

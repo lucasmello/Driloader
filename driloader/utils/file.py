@@ -1,3 +1,4 @@
+# pylint: disable=import-outside-toplevel
 """
 driloader.utils.file
 --------------------
