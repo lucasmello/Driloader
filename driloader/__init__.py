@@ -51,4 +51,4 @@ from driloader import driloader
 """
 
 
-from .driloader import chrome
+from .driloader import chrome, firefox, internet_explorer
