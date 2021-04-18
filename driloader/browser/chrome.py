@@ -25,7 +25,7 @@ class Chrome(BaseBrowser):
     Implements all BaseBrowser methods to find the proper Chrome version.
     """
 
-    __installed_version = None
+    _installed_version = None
     __default_path_win = r'C:\\Program Files (x86)\\Google\\Chrome' \
                          r'\\Application\\chrome.exe'
     __chrome_launch_unix = 'google-chrome'
@@ -134,7 +134,7 @@ class Chrome(BaseBrowser):
             BrowserDetectionError: Case something goes wrong when getting
             browser version.
         """
-        if self.__installed_version is None:
+        if self._installed_version is None:
             try:
                 if os.name == "nt":
                     # Here we assume the user installed Chrome
@@ -169,9 +169,9 @@ class Chrome(BaseBrowser):
                                             'version from system', error)
 
             int_version = int(str_version.partition('.')[0])
-            self.__installed_version = int_version
+            self._installed_version = int_version
             return int_version
-        return self.__installed_version
+        return self._installed_version
 
     def get_driver(self):
         """
