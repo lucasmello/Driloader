@@ -70,7 +70,7 @@ class Firefox(BaseBrowser):
             return None
         except Exception as error:
             raise BrowserDetectionError('Unable to retrieve Firefox version '
-                                        'from system', error)
+                                        'from system', error) from error
 
     @staticmethod
     def _find_firefox_exe_in_registry():

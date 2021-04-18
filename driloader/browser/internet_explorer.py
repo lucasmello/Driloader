@@ -105,7 +105,7 @@ class IE(BaseBrowser):
             int_version = int(str_version.partition(".")[0])
         except Exception as error:
             raise BrowserDetectionError('Unable to retrieve IE version '
-                                        'from system.', error)
+                                        'from system.', error) from error
 
         return int_version
 

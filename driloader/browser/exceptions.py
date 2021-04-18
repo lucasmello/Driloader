@@ -10,7 +10,7 @@ class BrowserDetectionError(Exception):
         Sets superclass arguments up.
         Sets the cause of exception up.
         """
-        super(BrowserDetectionError, self).__init__(message)
+        super().__init__(message)
         self.cause = cause
 
 
@@ -21,5 +21,5 @@ class BrowserNotSupportedError(Exception):
         Sets superclass arguments up.
         Sets the cause of exception up.
         """
-        super(BrowserNotSupportedError, self).__init__(message)
+        super().__init__(message)
         self.cause = cause

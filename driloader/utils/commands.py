@@ -65,8 +65,8 @@ class Commands:
                 return result
             raise CommandError('Command "{}" failed!'.format(''.join(command)))
 
-        except FileNotFoundError:
-            raise CommandError('Command "{}" not found!'.format(''.join(command)))
+        except FileNotFoundError as err:
+            raise CommandError('Command "{}" not found!'.format(''.join(command))) from err
 
     @staticmethod
     def get_command_output(command):

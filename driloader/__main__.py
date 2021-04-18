@@ -35,7 +35,7 @@ class CliError(Exception):
         Sets superclass arguments up.
         Sets the cause of exception up.
         """
-        super(CliError, self).__init__(message)
+        super().__init__(message)
         self.cause = cause
 
     # def __str__(self):
@@ -58,7 +58,7 @@ class DriloaderCommands:
         try:
             return BrowserFactory('CHROME').browser.installed_browser_version()
         except BrowserDetectionError as err:
-            raise CliError('Unable to get the Google Chrome version', str(err))
+            raise CliError('Unable to get the Google Chrome version', str(err)) from err
 
     @staticmethod
     def get_firefox_version():
@@ -74,7 +74,7 @@ class DriloaderCommands:
             return BrowserFactory('FIREFOX').browser.\
                 installed_browser_version()
         except BrowserDetectionError as err:
-            raise CliError('Unable to get the Firefox version', str(err))
+            raise CliError('Unable to get the Firefox version', str(err)) from err
 
     @staticmethod
     def get_internet_explorer_version():
@@ -90,7 +90,7 @@ class DriloaderCommands:
             return BrowserFactory('IE').browser.installed_browser_version()
         except BrowserDetectionError as err:
             raise CliError('Unable to get the Internet Explorer version',
-                           str(err))
+                           str(err)) from err
 
     def get_all_browsers_versions(self):
         """ Returns all browser version.

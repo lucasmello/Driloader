@@ -166,7 +166,7 @@ class Chrome(BaseBrowser):
 
             except Exception as error:
                 raise BrowserDetectionError('Unable to retrieve Chrome '
-                                            'version from system', error)
+                                            'version from system', error) from error
 
             int_version = int(str_version.partition('.')[0])
             self._installed_version = int_version
