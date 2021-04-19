@@ -7,7 +7,7 @@ REQUIRED = ['certifi', 'chardet', 'idna', 'requests', 'urllib3']
 
 setup(
     name='driloader',
-    version='1.2.5',
+    version='1.2.6',
     packages=find_packages(exclude=['tests', '*.tests', '*.tests.*']),
     package_data={'driloader': ['drivers_info.ini']},
     install_requires=REQUIRED,
