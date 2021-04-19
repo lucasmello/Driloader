@@ -9,6 +9,7 @@ Module which abstracts the browser instantiations.
 """
 
 from driloader.browser.chrome import Chrome
+from driloader.browser.drivers import Driver
 from driloader.browser.exceptions import BrowserNotSupportedError
 from driloader.browser.firefox import Firefox
 from driloader.browser.internet_explorer import IE
@@ -30,10 +31,17 @@ class BrowserFactory:
         :return:
         """
         if self._browser_name.upper() == 'CHROME':
-            return Chrome()
+            driver = Driver()
+            driver.browser = 'chrome'
+            return Chrome(driver)
         if self._browser_name.upper() == 'FIREFOX':
-            return Firefox()
+            driver = Driver()
+            driver.browser = 'firefox'
+            return Firefox(driver)
         if self._browser_name.upper() == 'IE':
-            return IE()
-        raise BrowserNotSupportedError('Sorry, but we currently not support your Browser.',
+            driver = Driver()
+            driver.browser = 'ie'
+            return IE(driver)
+        raise BrowserNotSupportedError('Sorry, but we currently not'
+                                       ' support your Browser.',
                                        'Browser is not supported.')

@@ -23,10 +23,8 @@ import random
 import zipfile
 
 import pytest
-import pytest_mock
-from requests import Response
 
-from driloader.downloader import Downloader
+from driloader.browser.drivers import Driver
 from driloader.utils.file import FileHandler
 
 
@@ -41,16 +39,16 @@ class TestDownloader:
         """
         mocker.patch('platform.system', return_value='Windows')
         # mocker.patch('driloader.browser.Browser.__init__', return_value=None)
-        mocker.patch('driloader.downloader.Downloader._create_driver_folder',
+        mocker.patch('driloader.browser.drivers.Driver.create_folder',
                      return_value='hidden_name')
 
 
     @staticmethod
     def test_driver_exist_for_a_non_existing_file(mock_system):
-        """ Test the static function Downloader.check_driver_exists()
+        """ Test the static function Driver.check_driver_exists()
         which should return False for a non-existing file.
         """
-        assert not Downloader.check_driver_exists('a_non_existing_file')
+        assert not Driver().exists('non_existing_file')
 
     @staticmethod
     def test_driver_exist_for_a_existing_file(mock_system):
@@ -62,7 +60,7 @@ class TestDownloader:
         with open(existing_file_name, 'w') as file:
             file.write('exists')
 
-        exists = Downloader.check_driver_exists(existing_file_name)
+        exists = Driver().exists(existing_file_name)
 
         os.remove(existing_file_name)
 
@@ -99,34 +97,3 @@ class TestDownloader:
         os.remove(existing_file_name)
 
         assert unzipped_file_exists
-
-    @staticmethod
-    def test_download_driver_file(mock_system, mocker):
-        """ Test the download of a file by mocking the
-            requests.Response object as a text file with a random number.
-
-            The assertion consists in checking if the content saved by the tested
-            function is a text file with the same random number.
-
-            Using IEDRIVER and mocking the needed functions from driloader.browser
-            to ensure the mocking would take care of all real system information.
-
-            This test takes usually longer than a few ms, probably because of IO operations
-            run in downloader.download_file().
-        """
-
-        mocked_response = str(random.random())
-        mock_file_name = './mocked_downloaded_file'
-
-        mocker.patch.object(Response, 'content')
-        Response.content = bytes(mocked_response, 'UTF-8')
-
-        downloader = Downloader('IE')
-        downloader.download_file('http://test.driver.io', mock_file_name)
-
-        with open(mock_file_name, 'r') as file:
-            file_content = file.read()
-        file.close()
-        os.remove(mock_file_name)
-
-        assert file_content == mocked_response

@@ -2,9 +2,14 @@
 Module that abstract all common operations to find right browser versions.
 """
 
-import os
-import configparser
 from abc import ABC, abstractmethod
+
+from driloader.browser.drivers import Driver
+from driloader.config.paths import Paths
+from driloader.http.operations import HttpOperations
+from driloader.http.proxy import Proxy
+from driloader.config.browser_config import BrowserConfig
+from driloader.utils.file import FileHandler
 
 
 class BaseBrowser(ABC):
@@ -14,41 +19,17 @@ class BaseBrowser(ABC):
     """
 
     def __init__(self, browser_name):
-        self.parser = configparser.ConfigParser()
-        self.parser.read(os.path.join(os.path.dirname(__file__), 'browsers.ini'))
-        self.section = self.parser[browser_name.upper()]
-        self.search_pattern_regex = self.parser.get('GENERAL', 'search_pattern')
-        self.base_url = self.parser.get(browser_name, 'base_url')
-        self.zipped_file = self._get_zipped_file_name()
-        self.unzipped_file = self._get_unzipped_file_name()
-
-    def _get_zipped_file_name(self):
-        """
-        Reads the zipped file's name from browsers.ini.
-        :return: zipped file name.
-        """
-        if os.name == 'nt':
-            return self.section['zip_file_win']
-        return self.section['zip_file_linux']
-
-    def _get_unzipped_file_name(self):
-        """
-        Reads the unzipped file's name from browsers.ini.
-        :return: unzipped file name.
-        """
-        if os.name == 'nt':
-            return self.section['unzipped_win']
-        return self.section['unzipped_linux']
+        self._config = BrowserConfig(browser_name)
 
     @abstractmethod
-    def latest_driver(self):
+    def _latest_driver(self):
         """"
         Returns the latest available driver.
         """
         raise NotImplementedError
 
     @abstractmethod
-    def driver_matching_installed_version(self):
+    def _driver_matching_installed_version(self):
         """
         Best matching between browser version and driver.
         """
@@ -60,3 +41,42 @@ class BaseBrowser(ABC):
         Detects the browser version.
         """
         raise NotImplementedError
+
+    def get_driver(self):
+        """
+        API to download and unzip the driver.
+        """
+        raise NotImplementedError
+
+    def _download_and_unzip(self, http: HttpOperations, driver: Driver,
+                            file: FileHandler, replace_version=False):
+        """
+        Downloads and unzip the driver.
+        """
+        paths = Paths(driver.create_folder(), self, driver)
+        unzipped_file_path = paths.unzipped_file_path()
+        if replace_version:
+            zipped_file_path = paths.zipped_file_path(
+                replace_version=driver.version)
+            download_url = paths.download_url(
+                replace_version=driver.version)
+        else:
+            zipped_file_path = paths.zipped_file_path(
+                replace_version=driver.version)
+            download_url = paths.download_url()
+        if not driver.exists(unzipped_file_path):
+            response = http.get(download_url, verify=False,
+                                proxies=Proxy().urls)
+            file.write_content(zipped_file_path, response.content)
+            FileHandler.unzip(zipped_file_path, unzipped_file_path,
+                              delete_after_extract=True)
+        if not paths.unzipped_file_path().endswith('.exe'):
+            driver.make_executable(unzipped_file_path)
+        return unzipped_file_path
+
+    @property
+    def config(self):
+        """
+        Return the config parser.
+        """
+        return self._config

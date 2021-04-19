@@ -24,7 +24,7 @@ usage:
     >>> from driloader import driloader
     >>> from selenium.webdriver import Firefox
     >>>
-    >>> driver_path = driloader.download_gecko_driver()
+    >>> driver_path = driloader.firefox().get_driver()
     >>> browser = Firefox(executable_path=driver_path)
     >>> browser.get("http://www.google.com")
     >>> browser.quit()
@@ -34,20 +34,19 @@ usage:
     >>> from driloader import driloader
     >>> from selenium.webdriver import Chrome
     >>>
-    >>> driver_path = driloader.download_chrome_driver()
+    >>> driver_path = driloader.chrome().get_driver()
     >>> browser = Chrome(executable_path=driver_path)
     >>> browser.get("http://www.google.com")
     >>> browser.quit()
 
  - Usage with Internet Explorer
-    >>> from driloader import driloader
     >>> from selenium.webdriver import Ie
-    >>>
-    >>> driver_path = driloader.download_ie_driver()
+    >>> from driloader import driloader
+    >>> driver_path = driloader.internet_explorer().get_driver()
     >>> browser = Ie(executable_path=driver_path)
     >>> browser.get("http://www.google.com")
     >>> browser.quit()
 """
 
 
-from .driloader import download_chrome_driver, download_gecko_driver, download_ie_driver
+from .driloader import chrome, firefox, internet_explorer

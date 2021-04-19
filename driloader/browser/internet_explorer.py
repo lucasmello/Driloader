@@ -1,4 +1,5 @@
-# pylint: disable=anomalous-backslash-in-string, too-many-locals
+# pylint: disable=anomalous-backslash-in-string, too-many-locals,
+# pylint: disable=multiple-statements
 
 """
 
@@ -7,36 +8,42 @@ Module that abstract operations to handle Internet Explorer versions.
 """
 
 import os
-import re
 import platform
+import re
 import xml.etree.ElementTree as ET
+
 import requests
 
-
 from driloader.browser.exceptions import BrowserDetectionError
-from driloader.commands import Commands
-from driloader.proxy import Proxy
+from driloader.http.proxy import Proxy
+from driloader.utils.commands import Commands
 from .basebrowser import BaseBrowser
+from .drivers import Driver
+from ..http.operations import HttpOperations
+from ..utils.file import FileHandler
 
 
 class IE(BaseBrowser):
     """
-    Implements all BaseBrowser methods to find the proper Internet Explorer version.
+    Implements all BaseBrowser methods to find the proper
+    Internet Explorer version.
     """
 
     _find_version_32_regex = r'IEDriverServer_Win32_([\d]+\.[\d]+\.[\d])'
     _find_version_64_regex = r'IEDriverServer_x64_([\d]+\.[\d]+\.[\d])'
 
-    def __init__(self):
+    def __init__(self, driver: Driver):
         super().__init__('IE')
         self.x64 = IE._is_windows_x64()
+        self._driver = driver
 
-    def latest_driver(self):
+    def _latest_driver(self):
         """
         Gets the latest ie driver version.
         :return: the latest ie driver version.
         """
-        resp = requests.get(self.section.get('RELEASES_URL'), proxies=Proxy().urls)
+        resp = requests.get(self._config.latest_release_url(),
+                            proxies=Proxy().urls)
         xml_dl = ET.fromstring(resp.text)
         root = ET.ElementTree(xml_dl)
         tag = root.getroot().tag
@@ -45,7 +52,10 @@ class IE(BaseBrowser):
         last_version = 0
         version_str = '0.0.0'
         last_version_str = '0.0.0'
-        pattern = IE._find_version_64_regex if self.x64 else IE._find_version_32_regex
+        if self.x64:
+            pattern = IE._find_version_64_regex
+        else:
+            pattern = IE._find_version_32_regex
         os_type = 'x64' if self.x64 else 'Win32'
         for content in contents:
             key = content.find(tag + 'Key').text
@@ -66,9 +76,9 @@ class IE(BaseBrowser):
                     last_version_str = version_str
         return last_version_str
 
-    def driver_matching_installed_version(self):
+    def _driver_matching_installed_version(self):
         # TODO: Version matcher for IE.
-        return self.latest_driver()
+        return self._latest_driver()
 
     def installed_browser_version(self):
         """ Returns Internet Explorer version.
@@ -76,25 +86,37 @@ class IE(BaseBrowser):
         Returns:
             Returns an int with the browser version.
         Raises:
-            BrowserDetectionError: Case something goes wrong when getting browser version.
+            BrowserDetectionError: Case something goes wrong when
+            getting browser version.
         """
 
         if os.name != "nt":
-            raise BrowserDetectionError('Unable to retrieve IE version.', 'System is not Windows.')
+            raise BrowserDetectionError('Unable to retrieve IE version.',
+                                        'System is not Windows.')
 
         cmd = ['reg', 'query',
-               'HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer', '/v', 'svcVersion']
+               'HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer',
+               '/v', 'svcVersion']
 
         try:
             output = Commands.run(cmd)
-            reg = re.search(self.search_pattern_regex, str(output))
+            reg = re.search(self._config.search_regex_pattern(), str(output))
             str_version = reg.group(0)
             int_version = int(str_version.partition(".")[0])
         except Exception as error:
-            raise BrowserDetectionError('Unable to retrieve IE version from system.', error)
+            raise BrowserDetectionError('Unable to retrieve IE version '
+                                        'from system.', error) from error
 
         return int_version
 
     @staticmethod
     def _is_windows_x64():
         return platform.machine().endswith('64')
+
+    def get_driver(self):
+        """
+                API to expose to client to download the driver and unzip it.
+                """
+        self._driver.version = self._driver_matching_installed_version()
+        return self._download_and_unzip(HttpOperations(),
+                                        self._driver, FileHandler())

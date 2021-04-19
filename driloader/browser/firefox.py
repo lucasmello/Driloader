@@ -1,3 +1,4 @@
+# pylint: disable=import-outside-toplevel
 """
 
 Module that abstract operations to handle Chrome versions.
@@ -6,12 +7,16 @@ Module that abstract operations to handle Chrome versions.
 
 import os
 import re
+
 import requests
 
-from driloader.browser.exceptions import BrowserDetectionError
-from driloader.commands import Commands
-from driloader.proxy import Proxy
+from driloader.http.proxy import Proxy
+from driloader.utils.commands import Commands
 from .basebrowser import BaseBrowser
+from .drivers import Driver
+from .exceptions import BrowserDetectionError
+from ..http.operations import HttpOperations
+from ..utils.file import FileHandler
 
 
 class Firefox(BaseBrowser):
@@ -19,22 +24,24 @@ class Firefox(BaseBrowser):
     Implements all BaseBrowser methods to find the proper Firefox version.
     """
 
-    def __init__(self):
+    def __init__(self, driver: Driver):
         super().__init__('FIREFOX')
-        self.latest_version_url = self.section.get('latest_release_url')
+        self.driver = driver
+        self.driver.version = self._latest_driver()
 
-    def latest_driver(self):
+    def _latest_driver(self):
         """
        Gets the latest gecko driver version.
        :return: the latest gecko driver version.
        """
-        resp = requests.get(self.latest_version_url, proxies=Proxy().urls)
+        resp = requests.get(self._config.latest_release_url(),
+                            proxies=Proxy().urls)
         reg = re.search(r'\d{1,2}[\d.]+', resp.url.rpartition('/')[2])
         return reg.group(0)
 
-    def driver_matching_installed_version(self):
+    def _driver_matching_installed_version(self):
         # TODO: get the right Firefox version
-        return self.latest_driver()
+        return self._latest_driver()
 
     def installed_browser_version(self):
         """ Returns Firefox version.
@@ -43,7 +50,8 @@ class Firefox(BaseBrowser):
         Returns:
             Returns an int with the browser version.
         Raises:
-            BrowserDetectionError: Case something goes wrong when getting browser version.
+            BrowserDetectionError: Case something goes wrong when getting
+            browser version.
         """
 
         try:
@@ -54,13 +62,15 @@ class Firefox(BaseBrowser):
                 output = Commands.get_command_output('firefox -v')
 
             if output is not None:
-                out_reg = re.search(self.search_pattern_regex, str(output))
+                out_reg = re.search(self._config.search_regex_pattern(),
+                                    str(output))
                 str_version = out_reg.group(0)
                 int_version = int(str_version.partition(".")[0])
                 return int_version
             return None
         except Exception as error:
-            raise BrowserDetectionError('Unable to retrieve Firefox version from system', error)
+            raise BrowserDetectionError('Unable to retrieve Firefox version '
+                                        'from system', error) from error
 
     @staticmethod
     def _find_firefox_exe_in_registry():
@@ -101,3 +111,7 @@ class Firefox(BaseBrowser):
             return ""
 
         return shlex.split(command)[0]
+
+    def get_driver(self):
+        return self._download_and_unzip(HttpOperations(), self.driver,
+                                        FileHandler(), replace_version=True)

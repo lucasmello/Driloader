@@ -12,7 +12,7 @@ Selenium drivers downloader tool with standalone CLI support.
  That's why Driloader exists: To make this process so much easier! Driloader autodetect the browser version (it supports Chrome, Firefox and Internet Explorer) and download the driver according to it's version.
 
 ## Requires
-* Python 3.4 or higher
+* Python 3.6 or higher
 
 ## Setup the project
 This project uses [Pipenv](https://github.com/pypa/pipenv) as packaging tool. Please make sure you have it installed in your system.
@@ -46,7 +46,7 @@ source ~/.local/share/virtualenvs/driloader-ZPASDPNJ/bin/activate
 from driloader import driloader
 from selenium.webdriver import Firefox
 
-driver_path = driloader.download_gecko_driver()
+driver_path = driloader.firefox().get_driver()
 browser = Firefox(executable_path=driver_path)
 browser.get("http://www.google.com")
 browser.quit()
@@ -57,7 +57,7 @@ browser.quit()
 from driloader import driloader
 from selenium.webdriver import Chrome
 
-driver_path = driloader.download_chrome_driver()
+driver_path = driloader.chrome().get_driver()
 browser = Chrome(executable_path=driver_path)
 browser.get("http://www.google.com")
 browser.quit()
@@ -68,8 +68,22 @@ browser.quit()
 from driloader import driloader
 from selenium.webdriver import Ie
 
-driver_path = driloader.download_ie_driver()
+driver_path = driloader.internet_explorer().get_driver()
 browser = Ie(executable_path=driver_path)
+browser.get("http://www.google.com")
+browser.quit()
+```
+
+### Setting browser's binary
+If you don't provide the browser's binary, driloader will try to find
+the browser in common paths, and sometimes it's not possible to find
+the browser. You can set the binary like this:
+```python
+from driloader import driloader
+from selenium.webdriver import Chrome
+
+driver_path = driloader.chrome().binary('/path/to/chrome').get_driver()
+browser = Chrome(executable_path=driver_path)
 browser.get("http://www.google.com")
 browser.quit()
 ```
@@ -126,3 +140,7 @@ Firefox: 45
 Google Chrome: 58
 
 ```
+
+### Known Issues
+* Firefox will always download the latest version, that is compatible with Firefox >= 70.
+* IEDriver will always download the latest version.
