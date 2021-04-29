@@ -3,13 +3,14 @@ from setuptools import setup, find_packages
 with open("README.md", "r", encoding="utf-8") as fh:
     LONG_DESCRIPTION = fh.read()
 DESCRIPTION = 'Driver downloader for Selenium'
-REQUIRED = ['certifi', 'chardet', 'idna', 'requests', 'urllib3']
+REQUIRED = ['certifi', 'chardet', 'idna', 'requests', 'urllib3', 'requests_html']
 
 setup(
     name='driloader',
-    version='1.2.6',
+    version='1.2.7',
     packages=find_packages(exclude=['tests', '*.tests', '*.tests.*']),
-    package_data={'driloader': ['drivers_info.ini']},
+    package_data={'driloader': ['drivers_info.ini'],
+                  'driloader.config': ['browsers.ini']},
     install_requires=REQUIRED,
     include_package_data=True,
     author='Lucas Trajano; Felipe Viegas; Jonatha Daguerre',
