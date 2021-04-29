@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open("README.md", "r", encoding="utf-8") as fh:
     LONG_DESCRIPTION = fh.read()
 DESCRIPTION = 'Driver downloader for Selenium'
-REQUIRED = ['certifi', 'chardet', 'idna', 'requests', 'urllib3']
+REQUIRED = ['certifi', 'chardet', 'idna', 'requests', 'urllib3', 'requests_html']
 
 setup(
     name='driloader',
